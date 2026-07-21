@@ -93,4 +93,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Ticket::class, 'technician_id');
     }
+
+    public function ticketStatusChanges(): HasMany
+    {
+        return $this->hasMany(TicketStatusHistory::class, 'changed_by');
+    }
 }

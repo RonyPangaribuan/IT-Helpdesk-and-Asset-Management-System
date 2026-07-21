@@ -49,7 +49,11 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        if ($user->requestedTickets()->withTrashed()->exists() || $user->assignedTickets()->withTrashed()->exists()) {
+        if (
+            $user->requestedTickets()->withTrashed()->exists()
+            || $user->assignedTickets()->withTrashed()->exists()
+            || $user->ticketStatusChanges()->exists()
+        ) {
             throw ValidationException::withMessages([
                 'password' => 'This account cannot be deleted while it is linked to tickets.',
             ])->errorBag('userDeletion');
