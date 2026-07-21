@@ -36,21 +36,38 @@
 
 ## Milestone 2: Core Ticket CRUD
 
-- [ ] Buat migration/model/factory/seeder `TicketCategory`.
-- [ ] Buat migration/model/factory `Ticket`.
-- [ ] Buat enum atau konstanta priority/status ticket.
-- [ ] Buat form request create/update ticket.
-- [ ] Implementasi create ticket requester.
-- [ ] Implementasi ticket list berdasarkan role.
-- [ ] Implementasi ticket detail.
-- [ ] Implementasi edit eligible ticket.
-- [ ] Implementasi archive ticket.
-- [ ] Tambahkan search, filter, dan pagination.
-- [ ] Tambahkan feature test ticket CRUD dasar.
+- [x] Buat migration/model/factory/seeder `TicketCategory`.
+- [x] Buat admin-only Ticket Category CRUD.
+- [x] Buat archive category dengan `is_active=false` dan soft delete.
+- [x] Buat tujuh default ticket categories.
+- [x] Buat migration/model/factory/seeder `Ticket`.
+- [x] Buat PHP backed enum `TicketPriority`.
+- [x] Buat PHP backed enum `TicketStatus`.
+- [x] Buat form request category.
+- [x] Buat form request create/update ticket.
+- [x] Buat minimal `TicketPolicy` untuk CRUD Milestone 2.
+- [x] Implementasi create ticket requester.
+- [x] Implementasi internal ticket code `TCK-YYYY-000001`.
+- [x] Implementasi ticket list berdasarkan role.
+- [x] Implementasi eager loading pada ticket list.
+- [x] Implementasi ticket detail.
+- [x] Implementasi edit eligible ticket.
+- [x] Implementasi admin-only archive ticket.
+- [x] Tambahkan search, filter, dan pagination.
+- [x] Pastikan archived category tidak tersedia pada form ticket baru.
+- [x] Pastikan ticket lama tetap menampilkan archived category.
+- [x] Tambahkan guard penghapusan profil untuk user yang punya ticket.
+- [x] Tambahkan feature test category management.
+- [x] Tambahkan feature test ticket creation.
+- [x] Tambahkan feature test listing, detail, search, filter, pagination.
+- [x] Tambahkan feature test update dan archive.
+- [x] Tambahkan feature test integration safety profile deletion.
+- [x] Jalankan migration dan seeder Milestone 2.
+- [x] Jalankan test Milestone 2.
 
 ## Milestone 3: Authorization And Workflow
 
-- [ ] Buat `TicketPolicy`.
+- [ ] Perluas `TicketPolicy` untuk assignment dan status workflow.
 - [ ] Implementasi admin assignment.
 - [ ] Implementasi status transition service.
 - [ ] Implementasi status history.

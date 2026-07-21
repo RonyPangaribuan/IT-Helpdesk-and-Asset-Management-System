@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -47,6 +48,12 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        if ($user->requestedTickets()->withTrashed()->exists() || $user->assignedTickets()->withTrashed()->exists()) {
+            throw ValidationException::withMessages([
+                'password' => 'This account cannot be deleted while it is linked to tickets.',
+            ])->errorBag('userDeletion');
+        }
 
         Auth::logout();
 
