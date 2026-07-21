@@ -15,6 +15,19 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard*')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')">
+                        {{ __('Tickets') }}
+                    </x-nav-link>
+                    @if (Auth::user()->isRequester())
+                        <x-nav-link :href="route('tickets.create')" :active="request()->routeIs('tickets.create')">
+                            {{ __('Create Ticket') }}
+                        </x-nav-link>
+                    @endif
+                    @if (Auth::user()->isAdmin())
+                        <x-nav-link :href="route('admin.ticket-categories.index')" :active="request()->routeIs('admin.ticket-categories.*')">
+                            {{ __('Ticket Categories') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -74,6 +87,19 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard*')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')">
+                {{ __('Tickets') }}
+            </x-responsive-nav-link>
+            @if (Auth::user()->isRequester())
+                <x-responsive-nav-link :href="route('tickets.create')" :active="request()->routeIs('tickets.create')">
+                    {{ __('Create Ticket') }}
+                </x-responsive-nav-link>
+            @endif
+            @if (Auth::user()->isAdmin())
+                <x-responsive-nav-link :href="route('admin.ticket-categories.index')" :active="request()->routeIs('admin.ticket-categories.*')">
+                    {{ __('Ticket Categories') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

@@ -79,10 +79,13 @@ Deliverables:
 
 - Ticket category migration/model/factory/seeder.
 - Ticket migration/model/factory.
+- Minimal TicketPolicy for safe CRUD authorization.
 - Requester ticket creation.
 - Role-aware ticket listing/detail/edit/archive.
 - Search, filters, pagination.
 - Form Requests for ticket/category validation.
+
+Note: the original plan placed `TicketPolicy` in Milestone 3, but Milestone 2 implementation includes a minimal policy because ticket resource CRUD requires authorization before assignment/status workflow is introduced.
 
 ### Milestone 3: Authorization And Workflow
 
