@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-DelDesk will support the `1.0.x` line after the first public release.
+deskIT will support the `1.0.x` line after the first public release.
 
 | Version | Supported |
 | --- | --- |

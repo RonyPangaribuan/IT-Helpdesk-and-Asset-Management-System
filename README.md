@@ -1,15 +1,15 @@
-# DelDesk
+# deskIT
 
 ![CI](https://github.com/RonyPangaribuan/IT-Helpdesk-and-Asset-Management-System/actions/workflows/ci.yml/badge.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-DelDesk is a Laravel monolith MVP for IT helpdesk ticketing and basic asset management. It is built as a portfolio project for demonstrating Laravel fundamentals: authentication, authorization, Eloquent relationships, Form Requests, policies, middleware, services, migrations, seeders, factories, Blade, Tailwind CSS, and automated tests.
+deskIT is a Laravel monolith MVP for IT helpdesk ticketing and basic asset management. It is built as a portfolio project for demonstrating Laravel fundamentals: authentication, authorization, Eloquent relationships, Form Requests, policies, middleware, services, migrations, seeders, factories, Blade, Tailwind CSS, and automated tests.
 
 Project status: **MVP v1.0.0 - Release Candidate**
 
 ## Problem Statement
 
-IT support reports are often scattered across chat, verbal requests, and spreadsheets. DelDesk centralizes support tickets, assignment, progress tracking, repair history, comments, attachments, and related asset records.
+IT support reports are often scattered across chat, verbal requests, and spreadsheets. deskIT centralizes support tickets, assignment, progress tracking, repair history, comments, attachments, and related asset records.
 
 ## Main Features
 
@@ -32,7 +32,7 @@ IT support reports are often scattered across chat, verbal requests, and spreads
 
 ## UI Overview
 
-DelDesk uses a clean SaaS dashboard style for the Blade MVP. The authenticated app has a role-aware sidebar, a compact sticky header, reusable page headers, neutral white content surfaces, subtle borders, and consistent status badges.
+deskIT uses a clean SaaS dashboard style for the Blade MVP. The authenticated app has a role-aware sidebar, a compact sticky header, reusable page headers, neutral white content surfaces, subtle borders, and consistent status badges.
 
 The UI direction is intentionally restrained:
 
@@ -98,7 +98,7 @@ Retired assets are stored as inactive and cannot be selected for new tickets.
 
 ## Architecture Overview
 
-DelDesk uses a single Laravel application:
+deskIT uses a single Laravel application:
 
 - Routes in `routes/web.php`.
 - Controllers for HTTP coordination.
@@ -212,12 +212,12 @@ Warning:
 
 | Role | Email |
 | --- | --- |
-| Admin | `admin@deldesk.test` |
-| Technician | `technician1@deldesk.test` |
-| Technician | `technician2@deldesk.test` |
-| Requester | `requester1@deldesk.test` |
-| Requester | `requester2@deldesk.test` |
-| Requester | `requester3@deldesk.test` |
+| Admin | `admin@deskit.test` |
+| Technician | `technician1@deskit.test` |
+| Technician | `technician2@deskit.test` |
+| Requester | `requester1@deskit.test` |
+| Requester | `requester2@deskit.test` |
+| Requester | `requester3@deskit.test` |
 
 ## Test Instructions
 
@@ -257,13 +257,13 @@ CI checks:
 
 ## Private Attachment Behavior
 
-Ticket attachments are stored through Laravel Storage on `config('deldesk.attachment_disk')`, defaulting to `local`. The local disk is private storage. Files are downloaded only through `TicketAttachmentController` after policy authorization.
+Ticket attachments are stored through Laravel Storage on `config('deskit.attachment_disk')`, defaulting to `local`. The local disk is private storage. Files are downloaded only through `TicketAttachmentController` after policy authorization.
 
-DelDesk does not create public attachment URLs and does not require `storage:link` for ticket attachments.
+deskIT does not create public attachment URLs and does not require `storage:link` for ticket attachments.
 
 ## Screenshots
 
-Screenshots: To be captured from the running redesigned UI.
+Screenshots: To be captured from the running rebranded deskIT UI.
 
 Checklist: [Screenshot Checklist](docs/SCREENSHOT_CHECKLIST.md)
 
@@ -305,4 +305,4 @@ No live demo URL is listed because no external deployment has been completed and
 
 ## License
 
-DelDesk is open-sourced under the [MIT License](LICENSE).
+deskIT is open-sourced under the [MIT License](LICENSE).

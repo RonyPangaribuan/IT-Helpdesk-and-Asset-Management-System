@@ -1,6 +1,6 @@
 # Architecture
 
-DelDesk is a Laravel monolith using Blade and Tailwind CSS. The application keeps the MVP simple: one deployable Laravel app, server-rendered views, Eloquent ORM, Form Requests, policies, middleware, services, migrations, factories, seeders, and feature tests.
+deskIT is a Laravel monolith using Blade and Tailwind CSS. The application keeps the MVP simple: one deployable Laravel app, server-rendered views, Eloquent ORM, Form Requests, policies, middleware, services, migrations, factories, seeders, and feature tests.
 
 ## Request Lifecycle
 
@@ -100,7 +100,7 @@ Alpine.js is only used by Breeze layout components for small interactions such a
 
 ## Private Storage
 
-Ticket attachments are stored on `config('deldesk.attachment_disk')`, which defaults to `local`. The local disk points to private storage. Files are downloaded through `TicketAttachmentController` only after policy authorization.
+Ticket attachments are stored on `config('deskit.attachment_disk')`, which defaults to `local`. The local disk points to private storage. Files are downloaded through `TicketAttachmentController` only after policy authorization.
 
 The app does not create public attachment URLs and does not require `storage:link` for private ticket files.
 

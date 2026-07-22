@@ -91,7 +91,7 @@ class TicketSeeder extends Seeder
                     'ticket_category_id' => $categories[$index % $categories->count()]->id,
                     'asset_id' => $asset?->id,
                     'title' => $ticketData['title'],
-                    'description' => 'Demo report for '.$ticketData['title'].'. This ticket demonstrates DelDesk ticket collaboration and workflow states.',
+                    'description' => 'Demo report for '.$ticketData['title'].'. This ticket demonstrates deskIT ticket collaboration and workflow states.',
                     'location' => $ticketData['location'],
                     'priority' => $ticketData['priority'],
                 ]);

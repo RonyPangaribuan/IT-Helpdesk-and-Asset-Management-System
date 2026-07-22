@@ -20,11 +20,58 @@ class ReleaseReadinessTest extends TestCase
 
     public function test_root_route_renders_branded_landing_page(): void
     {
+        config(['app.name' => 'deskIT']);
+
         $this->get(route('home'))
             ->assertOk()
-            ->assertSeeText('DelDesk')
-            ->assertSeeText('IT Helpdesk and Asset Management')
-            ->assertSeeText('Open DelDesk');
+            ->assertSee('<title>deskIT</title>', false)
+            ->assertSeeText('deskIT')
+            ->assertSeeText('IT Helpdesk & Asset Management', false)
+            ->assertSeeText('Open deskIT')
+            ->assertSee('branding/deskit-logo-full.png', false)
+            ->assertSee('favicon-32x32.png', false)
+            ->assertDontSeeText('DelDesk');
+    }
+
+    public function test_brand_assets_are_available(): void
+    {
+        foreach ([
+            public_path('branding/deskit-logo-source.png'),
+            public_path('branding/deskit-logo-full.png'),
+            public_path('branding/deskit-mark.png'),
+            public_path('branding/deskit-mark-192.png'),
+            public_path('branding/deskit-mark-512.png'),
+            public_path('favicon-32x32.png'),
+            public_path('favicon.ico'),
+        ] as $path) {
+            $this->assertFileExists($path);
+            $this->assertGreaterThan(0, filesize($path));
+        }
+    }
+
+    public function test_application_and_guest_layouts_use_accessible_deskit_branding(): void
+    {
+        config(['app.name' => 'deskIT']);
+
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('<title>deskIT</title>', false)
+            ->assertSee('aria-label="deskIT"', false)
+            ->assertSee('branding/deskit-mark.png', false)
+            ->assertSee('favicon.ico', false);
+
+        $this->post(route('logout'));
+
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertSee('<title>deskIT</title>', false)
+            ->assertSee('aria-label="deskIT"', false)
+            ->assertSee('branding/deskit-mark.png', false)
+            ->assertSee('branding/deskit-logo-full.png', false)
+            ->assertSee('favicon-32x32.png', false);
     }
 
     public function test_web_responses_include_security_headers(): void
@@ -48,7 +95,7 @@ class ReleaseReadinessTest extends TestCase
 
     public function test_ticket_attachments_use_configured_private_disk(): void
     {
-        config(['deldesk.attachment_disk' => 'configured-attachments']);
+        config(['deskit.attachment_disk' => 'configured-attachments']);
         Storage::fake('configured-attachments');
 
         $requester = User::factory()->requester()->create();
@@ -81,7 +128,7 @@ class ReleaseReadinessTest extends TestCase
             ->assertSeeText('Access denied')
             ->assertDontSeeText('SQLSTATE');
 
-        $this->get('/missing-deldesk-page')
+        $this->get('/missing-deskit-page')
             ->assertNotFound()
             ->assertSeeText('Page not found')
             ->assertDontSeeText(base_path());
@@ -91,11 +138,11 @@ class ReleaseReadinessTest extends TestCase
     {
         config(['app.debug' => false]);
 
-        Route::get('/__deldesk-error-test', function (): void {
+        Route::get('/__deskit-error-test', function (): void {
             throw new RuntimeException('SQLSTATE secret at C:\\server\\path');
         });
 
-        $this->get('/__deldesk-error-test')
+        $this->get('/__deskit-error-test')
             ->assertStatus(500)
             ->assertSeeText('Something went wrong')
             ->assertDontSeeText('SQLSTATE')
@@ -104,7 +151,7 @@ class ReleaseReadinessTest extends TestCase
 
     public function test_missing_attachment_returns_404(): void
     {
-        $disk = (string) config('deldesk.attachment_disk');
+        $disk = (string) config('deskit.attachment_disk');
         Storage::fake($disk);
 
         $requester = User::factory()->requester()->create();

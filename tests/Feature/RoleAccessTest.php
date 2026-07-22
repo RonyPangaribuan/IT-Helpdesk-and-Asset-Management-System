@@ -67,12 +67,12 @@ class RoleAccessTest extends TestCase
         $this->seed(DemoUserSeeder::class);
 
         foreach ([
-            'admin@deldesk.test',
-            'technician1@deldesk.test',
-            'technician2@deldesk.test',
-            'requester1@deldesk.test',
-            'requester2@deldesk.test',
-            'requester3@deldesk.test',
+            'admin@deskit.test',
+            'technician1@deskit.test',
+            'technician2@deskit.test',
+            'requester1@deskit.test',
+            'requester2@deskit.test',
+            'requester3@deskit.test',
         ] as $email) {
             $response = $this->post('/login', [
                 'email' => $email,

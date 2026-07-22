@@ -15,38 +15,38 @@ class DemoUserSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'DelDesk Admin',
-                'email' => 'admin@deldesk.test',
+                'name' => 'deskIT Admin',
+                'email' => 'admin@deskit.test',
                 'role' => User::ROLE_ADMIN,
                 'phone' => '0812-0000-0001',
             ],
             [
                 'name' => 'Budi Technician',
-                'email' => 'technician1@deldesk.test',
+                'email' => 'technician1@deskit.test',
                 'role' => User::ROLE_TECHNICIAN,
                 'phone' => '0812-0000-0002',
             ],
             [
                 'name' => 'Sari Technician',
-                'email' => 'technician2@deldesk.test',
+                'email' => 'technician2@deskit.test',
                 'role' => User::ROLE_TECHNICIAN,
                 'phone' => '0812-0000-0003',
             ],
             [
                 'name' => 'Alya Requester',
-                'email' => 'requester1@deldesk.test',
+                'email' => 'requester1@deskit.test',
                 'role' => User::ROLE_REQUESTER,
                 'phone' => '0812-0000-0004',
             ],
             [
                 'name' => 'Raka Requester',
-                'email' => 'requester2@deldesk.test',
+                'email' => 'requester2@deskit.test',
                 'role' => User::ROLE_REQUESTER,
                 'phone' => '0812-0000-0005',
             ],
             [
                 'name' => 'Mira Requester',
-                'email' => 'requester3@deldesk.test',
+                'email' => 'requester3@deskit.test',
                 'role' => User::ROLE_REQUESTER,
                 'phone' => '0812-0000-0006',
             ],

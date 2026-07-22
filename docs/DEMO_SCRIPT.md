@@ -10,27 +10,27 @@ All local demo accounts use password `password`.
 
 | Role | Email |
 | --- | --- |
-| Admin | `admin@deldesk.test` |
-| Technician | `technician1@deldesk.test` |
-| Technician | `technician2@deldesk.test` |
-| Requester | `requester1@deldesk.test` |
-| Requester | `requester2@deldesk.test` |
-| Requester | `requester3@deldesk.test` |
+| Admin | `admin@deskit.test` |
+| Technician | `technician1@deskit.test` |
+| Technician | `technician2@deskit.test` |
+| Requester | `requester1@deskit.test` |
+| Requester | `requester2@deskit.test` |
+| Requester | `requester3@deskit.test` |
 
 ## Script
 
 1. Introduce the problem: IT requests are often scattered across chat, verbal reports, and spreadsheets.
-2. Introduce DelDesk as a Laravel MVP for ticket lifecycle tracking and basic asset management.
+2. Introduce deskIT as a Laravel MVP for ticket lifecycle tracking and basic asset management.
 3. Open the landing page and briefly show Login/Register entry points.
-4. Log in as `requester1@deldesk.test`.
+4. Log in as `requester1@deskit.test`.
 5. Show the requester dashboard and recent tickets.
 6. Create a new ticket with category, priority, location, related asset, and one attachment.
 7. Open the ticket detail page and show initial status history, discussion, and attachment section.
-8. Log out and log in as `admin@deldesk.test`.
+8. Log out and log in as `admin@deskit.test`.
 9. Show the admin dashboard, ticket totals, category breakdown, priority breakdown, and active asset count.
-10. Open the new Open ticket and assign `technician1@deldesk.test`.
+10. Open the new Open ticket and assign `technician1@deskit.test`.
 11. Show status history after assignment.
-12. Log out and log in as `technician1@deldesk.test`.
+12. Log out and log in as `technician1@deskit.test`.
 13. Open assigned tickets, start work, add a comment, and resolve the ticket with a resolution note.
 14. Log out and log back in as the requester.
 15. Open the resolved ticket and either close it or reopen it with a reason.

@@ -25,7 +25,7 @@ class TicketAttachmentController extends Controller
     {
         $this->authorize('download', $attachment);
 
-        $disk = (string) config('deldesk.attachment_disk', 'local');
+        $disk = (string) config('deskit.attachment_disk', 'local');
 
         abort_unless(Storage::disk($disk)->exists($attachment->file_path), 404);
 

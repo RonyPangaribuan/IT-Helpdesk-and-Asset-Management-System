@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide is platform-neutral for PHP hosting or a VPS. It does not deploy DelDesk to any external provider and does not include real credentials.
+This guide is platform-neutral for PHP hosting or a VPS. It does not deploy deskIT to any external provider and does not include real credentials.
 
 ## Requirements
 

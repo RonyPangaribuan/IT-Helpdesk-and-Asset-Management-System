@@ -17,10 +17,10 @@ class TicketAttachmentFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (TicketAttachment $attachment): void {
-            $disk = (string) config('deldesk.attachment_disk', 'local');
+            $disk = (string) config('deskit.attachment_disk', 'local');
 
             if (! Storage::disk($disk)->exists($attachment->file_path)) {
-                Storage::disk($disk)->put($attachment->file_path, 'DelDesk test attachment.');
+                Storage::disk($disk)->put($attachment->file_path, 'deskIT test attachment.');
             }
         });
     }

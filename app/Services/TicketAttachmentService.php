@@ -18,7 +18,7 @@ class TicketAttachmentService
 
     public function __construct(private readonly TicketWorkflowService $workflow)
     {
-        $this->disk = (string) config('deldesk.attachment_disk', 'local');
+        $this->disk = (string) config('deskit.attachment_disk', 'local');
     }
 
     /**

@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="mb-6">
         <p class="text-sm font-medium text-indigo-700">Requester account</p>
-        <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-950">Create your DelDesk account</h1>
+        <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-950">Create your deskIT account</h1>
         <p class="mt-2 text-sm leading-6 text-slate-600">Public registration creates requester access only. Admin and technician accounts are managed by administrators.</p>
     </div>
 

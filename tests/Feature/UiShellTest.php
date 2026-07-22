@@ -65,6 +65,8 @@ class UiShellTest extends TestCase
 
     public function test_landing_auth_and_main_pages_render_with_polished_ui(): void
     {
+        config(['app.name' => 'deskIT']);
+
         $admin = User::factory()->admin()->create();
         $technician = User::factory()->technician()->create();
         $requester = User::factory()->requester()->create();
@@ -77,15 +79,16 @@ class UiShellTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertSeeText('IT support, organized from report to resolution.')
-            ->assertSeeText('Open DelDesk');
+            ->assertSeeText('Open deskIT')
+            ->assertDontSeeText('DelDesk');
 
         $this->get(route('login'))
             ->assertOk()
-            ->assertSeeText('Log in to DelDesk');
+            ->assertSeeText('Log in to deskIT');
 
         $this->get(route('register'))
             ->assertOk()
-            ->assertSeeText('Create your DelDesk account');
+            ->assertSeeText('Create your deskIT account');
 
         $this->actingAs($requester)
             ->get(route('tickets.index'))

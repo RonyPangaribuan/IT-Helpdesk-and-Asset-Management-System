@@ -25,6 +25,15 @@ class DemoDataSeederTest extends TestCase
         $this->assertSame(1, User::query()->where('role', User::ROLE_ADMIN)->where('is_active', true)->count());
         $this->assertSame(2, User::query()->where('role', User::ROLE_TECHNICIAN)->where('is_active', true)->count());
         $this->assertSame(3, User::query()->where('role', User::ROLE_REQUESTER)->where('is_active', true)->count());
+        $this->assertSame([
+            'admin@deskit.test',
+            'requester1@deskit.test',
+            'requester2@deskit.test',
+            'requester3@deskit.test',
+            'technician1@deskit.test',
+            'technician2@deskit.test',
+        ], User::query()->orderBy('email')->pluck('email')->all());
+
         $this->assertSame(7, TicketCategory::count());
         $this->assertSame(7, AssetCategory::count());
         $this->assertGreaterThanOrEqual(12, Asset::count());

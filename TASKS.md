@@ -1,4 +1,4 @@
-# DelDesk Tasks
+# deskIT Tasks
 
 ## Tahap A: Analisis
 
@@ -19,7 +19,7 @@
 - [x] Pastikan `.env` tetap tidak dikomit.
 - [x] Pasang Laravel Breeze Blade.
 - [x] Install dependensi frontend Tailwind/Vite.
-- [x] Buat layout dasar DelDesk.
+- [x] Buat layout dasar deskIT.
 - [x] Tambahkan role `admin`, `technician`, dan `requester`.
 - [x] Pastikan public registration selalu membuat role `requester`.
 - [x] Tambahkan field awal user: `role`, `phone`, `is_active`.
@@ -172,7 +172,7 @@
 - [x] Tambahkan alias middleware `active`.
 - [x] Terapkan `active` pada protected routes.
 - [x] Logout dan invalidasi session user yang dinonaktifkan saat masih login.
-- [x] Tambahkan `config/deldesk.php` untuk private attachment disk.
+- [x] Tambahkan `config/deskit.php` untuk private attachment disk.
 - [x] Perbarui attachment service/controller/test agar tidak hard-code disk.
 - [x] Tambahkan `TICKET_ATTACHMENT_DISK=local` ke `.env.example`.
 - [x] Perbarui demo seed data menjadi 24 tickets.
@@ -191,7 +191,7 @@
 - [x] Tambahkan middleware `AddSecurityHeaders`.
 - [x] Tambahkan custom error pages 403, 404, 419, dan 500.
 - [x] Ganti root route closure menjadi cache-safe `Route::view`.
-- [x] Ganti landing page default menjadi branded DelDesk landing page.
+- [x] Ganti landing page default menjadi branded deskIT landing page.
 - [x] Perbarui navigation desktop dan mobile dengan menu Users untuk admin.
 - [x] Tambahkan basic accessibility polish untuk flash messages.
 - [x] Bersihkan separator encoding pada partial ticket.
@@ -236,3 +236,18 @@
 - [ ] Responsive audit.
 - [ ] Accessibility audit.
 - [x] Build and tests.
+
+## Branding Migration: deskIT
+
+- [x] Create `chore/rebrand-deskit` from latest `origin/master` with UI/UX polish.
+- [x] Generate deskIT PNG logo assets from the provided raster source.
+- [x] Replace old user-facing product references in active UI.
+- [x] Replace demo account domain with `@deskit.test`.
+- [x] Rename attachment configuration to `config/deskit.php`.
+- [x] Update attachment service, controller, factories, tests, and docs to `config('deskit.attachment_disk')`.
+- [x] Add deskIT favicon and touch icon metadata.
+- [x] Update Composer package metadata.
+- [x] Update documentation for deskIT.
+- [x] Add branding regression tests.
+- [ ] Capture new screenshots after rebranding.
+- [ ] Perform manual responsive visual audit after rebranding.

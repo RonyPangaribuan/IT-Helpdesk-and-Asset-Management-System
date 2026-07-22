@@ -1,10 +1,10 @@
-# DelDesk Implementation Plan
+# deskIT Implementation Plan
 
 ## Source And Scope
 
 Primary source: `PRD.md` version 1.0.
 
-DelDesk is implemented as a Laravel monolith using Blade and Tailwind CSS. Work is intentionally staged by milestone. Milestones 1 through 6 now cover the project foundation, core ticket CRUD, authorization and workflow, ticket collaboration, private attachments, ticket resolution, asset management, ticket-to-asset links, role-based dashboards, admin user management, active-account enforcement, release documentation, CI hardening, and deployment readiness.
+deskIT is implemented as a Laravel monolith using Blade and Tailwind CSS. Work is intentionally staged by milestone. Milestones 1 through 6 now cover the project foundation, core ticket CRUD, authorization and workflow, ticket collaboration, private attachments, ticket resolution, asset management, ticket-to-asset links, role-based dashboards, admin user management, active-account enforcement, release documentation, CI hardening, and deployment readiness.
 
 Actual external deployment, real screenshots, a recorded demo video, a release tag, and a GitHub Release remain manual actions because no hosting target, credentials, image files, video URL, or release approval were provided.
 
@@ -64,7 +64,7 @@ Deliverables:
 
 - Laravel 12 project initialized.
 - Breeze Blade/Tailwind authentication installed.
-- Base authenticated layout adjusted for DelDesk.
+- Base authenticated layout adjusted for deskIT.
 - `users` table extended with `role`, `phone`, and `is_active`.
 - Role constants/helpers on `User` model.
 - Public registration always creates requester accounts.

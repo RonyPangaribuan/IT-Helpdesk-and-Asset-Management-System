@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to DelDesk are documented in this file.
+All notable changes to deskIT are documented in this file.
 
 The format is based on Keep a Changelog, and this project uses semantic versioning after the first release.
 
@@ -22,6 +22,11 @@ The format is based on Keep a Changelog, and this project uses semantic versioni
 - Demo seed data for users, categories, assets, tickets, comments, and histories.
 - GitHub Actions CI for migration, seeding, Pint, PHPUnit, Vite build, Composer audit, and Laravel cache checks.
 - Release documentation, ERD, architecture notes, deployment guide, security policy, and release checklist.
+
+### Changed
+
+- Rebranded the application from DelDesk to deskIT.
+- Added new deskIT visual identity and application icons.
 
 ### Security
 

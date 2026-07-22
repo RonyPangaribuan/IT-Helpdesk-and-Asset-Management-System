@@ -5,7 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'DelDesk') }}</title>
+        <title>{{ config('app.name', 'deskIT') }}</title>
+
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('branding/deskit-mark-192.png') }}">
+        <meta name="application-name" content="{{ config('app.name', 'deskIT') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -19,14 +24,21 @@
             <div class="grid min-h-screen lg:grid-cols-[0.95fr_1.05fr]">
                 <section class="hidden bg-slate-950 px-10 py-10 text-white lg:flex lg:flex-col lg:justify-between">
                     <a href="{{ route('home') }}" class="inline-flex items-center gap-3 text-white">
-                        <x-application-logo class="h-10 w-auto" />
+                        <x-application-logo class="h-10 w-auto" desk-class="text-white" it-class="text-cyan-300" />
                     </a>
 
                     <div class="max-w-md">
-                        <p class="text-sm font-medium text-indigo-200">IT Helpdesk and Asset Management</p>
+                        <img
+                            src="{{ asset('branding/deskit-logo-full.png') }}"
+                            alt="deskIT IT helpdesk workflow illustration"
+                            width="770"
+                            height="892"
+                            class="mb-8 max-h-48 w-full object-contain object-left"
+                        >
+                        <p class="text-sm font-medium text-indigo-200">IT Helpdesk & Asset Management</p>
                         <h1 class="mt-4 text-3xl font-semibold tracking-tight">Support work, organized from login onward.</h1>
                         <p class="mt-4 text-sm leading-6 text-slate-300">
-                            DelDesk keeps reports, assignments, comments, attachments, and asset history in one role-aware workspace.
+                            deskIT keeps reports, assignments, comments, attachments, and asset history in one role-aware workspace.
                         </p>
                     </div>
 
