@@ -78,7 +78,7 @@
                                 <tr>
                                     <td class="whitespace-nowrap px-4 py-4 text-sm font-medium text-stone-950">{{ $ticket->ticket_code }}</td>
                                     <td class="px-4 py-4 text-sm text-stone-700">
-                                        <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-teal-700 hover:text-teal-900">{{ $ticket->title }}</a>
+                                        <a href="{{ route('tickets.show', $ticket) }}" class="break-words font-medium text-teal-700 hover:text-teal-900">{{ $ticket->title }}</a>
                                         <div class="mt-1 text-xs text-stone-500">{{ $ticket->created_at->format('d M Y H:i') }}</div>
                                     </td>
                                     <td class="px-4 py-4 text-sm text-stone-700">

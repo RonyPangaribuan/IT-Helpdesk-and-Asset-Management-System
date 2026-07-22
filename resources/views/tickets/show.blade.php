@@ -3,7 +3,7 @@
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <p class="text-sm font-medium uppercase text-teal-700">{{ $ticket->ticket_code }}</p>
-                <h1 class="text-2xl font-semibold text-stone-950">{{ $ticket->title }}</h1>
+                <h1 class="break-words text-2xl font-semibold text-stone-950">{{ $ticket->title }}</h1>
             </div>
             <div class="flex flex-wrap gap-2">
                 @can('update', $ticket)

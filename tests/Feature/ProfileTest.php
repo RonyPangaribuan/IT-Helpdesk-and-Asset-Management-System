@@ -64,7 +64,7 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
-    public function test_user_can_delete_their_account(): void
+    public function test_user_can_deactivate_their_account(): void
     {
         $user = User::factory()->create();
 
@@ -76,13 +76,14 @@ class ProfileTest extends TestCase
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect('/');
+            ->assertRedirect('/login');
 
         $this->assertGuest();
-        $this->assertNull($user->fresh());
+        $this->assertNotNull($user->fresh());
+        $this->assertFalse($user->fresh()->is_active);
     }
 
-    public function test_correct_password_must_be_provided_to_delete_account(): void
+    public function test_correct_password_must_be_provided_to_deactivate_account(): void
     {
         $user = User::factory()->create();
 
@@ -100,7 +101,7 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->fresh());
     }
 
-    public function test_user_with_ticket_comment_cannot_delete_account(): void
+    public function test_user_with_ticket_comment_can_deactivate_without_being_deleted(): void
     {
         $user = User::factory()->requester()->create();
         $ticket = Ticket::factory()->create();
@@ -109,13 +110,14 @@ class ProfileTest extends TestCase
         $this->actingAs($user)
             ->from('/profile')
             ->delete('/profile', ['password' => 'password'])
-            ->assertRedirect('/profile')
-            ->assertSessionHasErrorsIn('userDeletion', 'password');
+            ->assertRedirect('/login')
+            ->assertSessionHasNoErrors();
 
         $this->assertNotNull($user->fresh());
+        $this->assertFalse($user->fresh()->is_active);
     }
 
-    public function test_user_with_uploaded_ticket_attachment_cannot_delete_account(): void
+    public function test_user_with_uploaded_ticket_attachment_can_deactivate_without_being_deleted(): void
     {
         $user = User::factory()->requester()->create();
         $ticket = Ticket::factory()->create();
@@ -124,9 +126,23 @@ class ProfileTest extends TestCase
         $this->actingAs($user)
             ->from('/profile')
             ->delete('/profile', ['password' => 'password'])
+            ->assertRedirect('/login')
+            ->assertSessionHasNoErrors();
+
+        $this->assertNotNull($user->fresh());
+        $this->assertFalse($user->fresh()->is_active);
+    }
+
+    public function test_administrator_cannot_deactivate_own_profile_account(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->from('/profile')
+            ->delete('/profile', ['password' => 'password'])
             ->assertRedirect('/profile')
             ->assertSessionHasErrorsIn('userDeletion', 'password');
 
-        $this->assertNotNull($user->fresh());
+        $this->assertTrue($admin->fresh()->is_active);
     }
 }

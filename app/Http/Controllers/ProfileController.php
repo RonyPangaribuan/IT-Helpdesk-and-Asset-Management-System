@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\UserManagementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -41,33 +41,20 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, UserManagementService $users): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
         $user = $request->user();
-
-        if (
-            $user->requestedTickets()->withTrashed()->exists()
-            || $user->assignedTickets()->withTrashed()->exists()
-            || $user->ticketComments()->withTrashed()->exists()
-            || $user->uploadedTicketAttachments()->exists()
-            || $user->ticketStatusChanges()->exists()
-        ) {
-            throw ValidationException::withMessages([
-                'password' => 'This account cannot be deleted while it is linked to tickets.',
-            ])->errorBag('userDeletion');
-        }
+        $users->deactivateOwnAccount($user);
 
         Auth::logout();
-
-        $user->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::route('login')->with('success', 'Your account has been deactivated.');
     }
 }

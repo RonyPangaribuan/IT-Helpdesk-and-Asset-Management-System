@@ -29,6 +29,9 @@
                         </x-nav-link>
                     @endif
                     @if (Auth::user()->isAdmin())
+                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                            {{ __('Users') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('admin.ticket-categories.index')" :active="request()->routeIs('admin.ticket-categories.*')">
                             {{ __('Ticket Categories') }}
                         </x-nav-link>
@@ -109,6 +112,9 @@
                 </x-responsive-nav-link>
             @endif
             @if (Auth::user()->isAdmin())
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                    {{ __('Users') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.ticket-categories.index')" :active="request()->routeIs('admin.ticket-categories.*')">
                     {{ __('Ticket Categories') }}
                 </x-responsive-nav-link>

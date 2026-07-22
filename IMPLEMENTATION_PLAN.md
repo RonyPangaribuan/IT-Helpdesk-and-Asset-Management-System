@@ -4,9 +4,9 @@
 
 Primary source: `PRD.md` version 1.0.
 
-DelDesk is implemented as a Laravel monolith using Blade and Tailwind CSS. Work is intentionally staged by milestone. Milestones 1 through 5 now cover the project foundation, core ticket CRUD, authorization and workflow, ticket collaboration, private attachments, ticket resolution, asset management, ticket-to-asset links, and role-based dashboards.
+DelDesk is implemented as a Laravel monolith using Blade and Tailwind CSS. Work is intentionally staged by milestone. Milestones 1 through 6 now cover the project foundation, core ticket CRUD, authorization and workflow, ticket collaboration, private attachments, ticket resolution, asset management, ticket-to-asset links, role-based dashboards, admin user management, active-account enforcement, release documentation, CI hardening, and deployment readiness.
 
-Release polish, screenshots, ERD assets, demo video, deployment notes, and production deployment remain deferred to Milestone 6.
+Actual external deployment, real screenshots, a recorded demo video, a release tag, and a GitHub Release remain manual actions because no hosting target, credentials, image files, video URL, or release approval were provided.
 
 ## Environment Findings
 
@@ -137,11 +137,26 @@ Decision: asset codes are manually entered inventory identifiers and are normali
 
 Deliverables:
 
-- Expanded factories/seeders.
-- Feature and unit tests from PRD list.
-- Responsive UI polish.
-- Error handling.
-- README, screenshots, deployment notes, demo data.
+- PRD compliance documentation.
+- Admin user management with active/inactive controls.
+- Active-account enforcement for login and existing sessions.
+- Expanded demo data with 24 tickets.
+- Factory audit for consistent states and private attachment files.
+- Configurable private attachment disk.
+- Security headers.
+- Custom error pages.
+- Branded public landing page.
+- Production cache compatibility.
+- CI Composer audit and cache checks.
+- README, ERD, architecture documentation, deployment guide, screenshot checklist, demo script, license, changelog, security policy, and release checklist.
+
+Manual action remaining:
+
+- Capture real screenshots.
+- Record the demo video.
+- Deploy to a selected hosting target.
+- Verify a live URL.
+- Create release tag and GitHub Release after approval.
 
 ## Database Design
 

@@ -39,6 +39,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
+      - name: Audit Composer dependencies
+        run: composer audit --locked
+
       - name: Copy environment file
         run: cp .env.example .env
 
@@ -71,3 +74,15 @@ jobs:
 
       - name: Run Laravel tests
         run: php artisan test
+
+      - name: Cache Laravel configuration
+        run: php artisan config:cache
+
+      - name: Cache Laravel routes
+        run: php artisan route:cache
+
+      - name: Cache Blade views
+        run: php artisan view:cache
+
+      - name: Clear optimized files
+        run: php artisan optimize:clear
