@@ -52,6 +52,8 @@ class ProfileController extends Controller
         if (
             $user->requestedTickets()->withTrashed()->exists()
             || $user->assignedTickets()->withTrashed()->exists()
+            || $user->ticketComments()->withTrashed()->exists()
+            || $user->uploadedTicketAttachments()->exists()
             || $user->ticketStatusChanges()->exists()
         ) {
             throw ValidationException::withMessages([

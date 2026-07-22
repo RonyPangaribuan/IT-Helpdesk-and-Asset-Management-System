@@ -4,9 +4,9 @@
 
 Primary source: `PRD.md` version 1.0.
 
-This plan starts DelDesk as a Laravel monolith using Blade and Tailwind CSS. Work is intentionally staged. The first implementation pass only covers Milestone 1: project foundation, authentication, roles, demo users, role-aware dashboard placeholders, and tests around authentication/role restrictions.
+DelDesk is implemented as a Laravel monolith using Blade and Tailwind CSS. Work is intentionally staged by milestone. Milestones 1 through 4 now cover the project foundation, core ticket CRUD, authorization and workflow, ticket collaboration, private attachments, and ticket resolution.
 
-Ticket CRUD, asset CRUD, comments, attachments, status history, assignment workflow, and dashboard statistics are planned but not implemented in Milestone 1.
+Asset CRUD, ticket-to-asset relationships, dashboard statistics, release polish, and deployment remain deferred to later milestones.
 
 ## Environment Findings
 
@@ -104,11 +104,17 @@ Milestone 3 active transitions are intentionally limited to `Open -> Assigned`, 
 
 Deliverables:
 
-- Ticket comments.
-- Ticket attachments through Laravel Storage.
-- Resolution note.
-- Close and reopen actions.
-- Attachment authorization.
+- Ticket comments on visible, active tickets.
+- Author-owned comment editing and admin comment deletion.
+- Ticket attachments through Laravel Storage local disk.
+- Attachment validation for JPG, JPEG, PNG, and PDF files up to 5 MB each.
+- Private attachment downloads authorized by policy.
+- Resolution note through assigned-technician Resolve action.
+- Close action for requester or admin after resolution.
+- Reopen action for requester from Resolved.
+- Reopened tickets remain assigned to the current technician, can be resumed by that technician, and can be reassigned by admin.
+
+Decision: attachment files stay on the private local disk and are served only through an authorized controller action. No public storage symlink or direct public URL is used.
 
 ### Milestone 5: Asset Management And Dashboard
 
@@ -302,10 +308,13 @@ Later MVP routes:
 - `PATCH tickets/{ticket}/assign` -> `TicketAssignmentController@update`.
 - `PATCH tickets/{ticket}/start-work` -> `TicketWorkflowController@startWork`.
 - `PATCH tickets/{ticket}/cancel` -> `TicketWorkflowController@cancel`.
-- `PATCH tickets/{ticket}/status` -> deferred; Milestone 3 uses specific workflow actions instead of a generic status endpoint.
+- `PATCH tickets/{ticket}/resolve` -> `TicketWorkflowController@resolve`.
+- `PATCH tickets/{ticket}/close` -> `TicketWorkflowController@close`.
+- `PATCH tickets/{ticket}/reopen` -> `TicketWorkflowController@reopen`.
+- `PATCH tickets/{ticket}/status` -> not used; workflow uses specific actions instead of a generic status endpoint.
 - `resource tickets.comments` -> `TicketCommentController` limited to store/update/destroy.
 - `POST tickets/{ticket}/attachments` -> `TicketAttachmentController@store`.
-- `GET ticket-attachments/{attachment}` -> `TicketAttachmentController@show`.
+- `GET ticket-attachments/{attachment}/download` -> `TicketAttachmentController@download`.
 - `resource admin/ticket-categories` -> `TicketCategoryController`.
 - `resource admin/asset-categories` -> `AssetCategoryController`.
 - `resource assets` -> `AssetController`.

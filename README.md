@@ -2,7 +2,7 @@
 
 DelDesk is a Laravel monolith MVP for an IT helpdesk and basic asset management system. The project follows the requirements in `PRD.md` and is being implemented gradually by milestone.
 
-Current milestone: Authorization and Ticket Workflow.
+Current milestone: Collaboration and Ticket Resolution.
 
 ## Stack
 
@@ -88,6 +88,20 @@ All demo accounts use the password `password`.
 - Expanded `TicketPolicy` abilities for workflow actions.
 - Demo seeder creates Open, Assigned, In Progress, and Cancelled tickets with consistent history.
 
+### Milestone 4: Collaboration and Ticket Resolution
+
+- Ticket discussion comments for visible participants while a ticket is active.
+- Comment editing by the author and deletion by admins.
+- Private ticket attachments stored on Laravel's local disk.
+- Attachment upload validation for JPG, JPEG, PNG, and PDF files up to 5 MB each.
+- Attachment download authorization for admins, ticket requester, and assigned technician.
+- Optional attachments on ticket creation.
+- Technician resolution flow with required resolution note.
+- Requester or admin close action after resolution.
+- Requester reopen action from Resolved, preserving the assigned technician.
+- Reopened tickets can be resumed by the assigned technician or reassigned by an admin.
+- Closed and Cancelled tickets are read-only for collaboration and workflow actions.
+
 ## Main Routes
 
 | Area | Route |
@@ -100,6 +114,14 @@ All demo accounts use the password `password`.
 | Reassign ticket | `PATCH /tickets/{ticket}/assign` |
 | Start work | `PATCH /tickets/{ticket}/start-work` |
 | Cancel ticket | `PATCH /tickets/{ticket}/cancel` |
+| Resolve ticket | `PATCH /tickets/{ticket}/resolve` |
+| Close ticket | `PATCH /tickets/{ticket}/close` |
+| Reopen ticket | `PATCH /tickets/{ticket}/reopen` |
+| Add ticket comment | `POST /tickets/{ticket}/comments` |
+| Update ticket comment | `PATCH /tickets/{ticket}/comments/{comment}` |
+| Delete ticket comment | `DELETE /tickets/{ticket}/comments/{comment}` |
+| Upload ticket attachments | `POST /tickets/{ticket}/attachments` |
+| Download ticket attachment | `GET /ticket-attachments/{attachment}/download` |
 | Admin ticket categories | `/admin/ticket-categories` |
 
 ## Database And Seeders
@@ -108,12 +130,9 @@ All demo accounts use the password `password`.
 php artisan migrate:fresh --seed
 ```
 
-The seeders create demo users, seven default ticket categories, and demo tickets across Open, Assigned, In Progress, and Cancelled states. Every seeded ticket has status history; workflow transitions are created through the same service used by the web actions.
+The seeders create demo users, seven default ticket categories, demo tickets across Open, Assigned, In Progress, Resolved, Closed, Reopened, and Cancelled states, and demo comments. Every seeded ticket has status history; workflow transitions are created through the same service used by the web actions. Attachment metadata factories exist for tests, but the demo seeder does not create fake physical attachment files.
 
 ## Not Implemented Yet
 
 - Asset CRUD.
-- Ticket comments.
-- Ticket attachments.
-- Resolve Ticket, resolution notes, Close Ticket, and Reopen Ticket actions.
 - Dashboard statistics.

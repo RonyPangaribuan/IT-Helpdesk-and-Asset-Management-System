@@ -50,12 +50,12 @@ class TicketPolicy
     public function update(User $user, Ticket $ticket): bool
     {
         if ($user->isAdmin()) {
-            return ! $ticket->isReadOnly();
+            return $ticket->isAdminEditable();
         }
 
         return $user->isRequester()
             && $ticket->requester_id === $user->id
-            && $ticket->isOpenAndUnassigned();
+            && $ticket->isRequesterEditable();
     }
 
     /**
@@ -74,14 +74,14 @@ class TicketPolicy
     public function reassign(User $user, Ticket $ticket): bool
     {
         return $user->isAdmin()
-            && $ticket->status === TicketStatus::Assigned
+            && in_array($ticket->status, [TicketStatus::Assigned, TicketStatus::Reopened], true)
             && $ticket->technician_id !== null;
     }
 
     public function startWork(User $user, Ticket $ticket): bool
     {
         return $user->isTechnician()
-            && $ticket->status === TicketStatus::Assigned
+            && in_array($ticket->status, [TicketStatus::Assigned, TicketStatus::Reopened], true)
             && $ticket->technician_id === $user->id;
     }
 
@@ -99,6 +99,52 @@ class TicketPolicy
     public function viewStatusHistory(User $user, Ticket $ticket): bool
     {
         return $this->view($user, $ticket);
+    }
+
+    public function comment(User $user, Ticket $ticket): bool
+    {
+        return $this->view($user, $ticket) && $ticket->isCollaborationOpen();
+    }
+
+    public function uploadAttachment(User $user, Ticket $ticket): bool
+    {
+        if (! $ticket->isCollaborationOpen()) {
+            return false;
+        }
+
+        if ($user->isRequester()) {
+            return $ticket->requester_id === $user->id;
+        }
+
+        if ($user->isTechnician()) {
+            return $ticket->technician_id === $user->id;
+        }
+
+        return false;
+    }
+
+    public function resolve(User $user, Ticket $ticket): bool
+    {
+        return $user->isTechnician()
+            && $ticket->status === TicketStatus::InProgress
+            && $ticket->technician_id === $user->id;
+    }
+
+    public function close(User $user, Ticket $ticket): bool
+    {
+        if ($ticket->status !== TicketStatus::Resolved) {
+            return false;
+        }
+
+        return $user->isAdmin()
+            || ($user->isRequester() && $ticket->requester_id === $user->id);
+    }
+
+    public function reopen(User $user, Ticket $ticket): bool
+    {
+        return $user->isRequester()
+            && $ticket->requester_id === $user->id
+            && $ticket->status === TicketStatus::Resolved;
     }
 
     /**

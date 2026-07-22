@@ -88,6 +88,39 @@ class TicketFactory extends Factory
         ]);
     }
 
+    public function resolved(User $technician): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'technician_id' => $technician->id,
+            'status' => TicketStatus::Resolved,
+            'resolution_note' => 'The issue was resolved during troubleshooting.',
+            'resolved_at' => now(),
+            'closed_at' => null,
+        ]);
+    }
+
+    public function closed(User $technician): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'technician_id' => $technician->id,
+            'status' => TicketStatus::Closed,
+            'resolution_note' => 'The issue was resolved and confirmed by the requester.',
+            'resolved_at' => now()->subHour(),
+            'closed_at' => now(),
+        ]);
+    }
+
+    public function reopened(User $technician): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'technician_id' => $technician->id,
+            'status' => TicketStatus::Reopened,
+            'resolution_note' => null,
+            'resolved_at' => null,
+            'closed_at' => null,
+        ]);
+    }
+
     public function cancelled(?User $technician = null): static
     {
         return $this->state(fn (array $attributes) => [

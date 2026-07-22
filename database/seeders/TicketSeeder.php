@@ -54,14 +54,14 @@ class TicketSeeder extends Seeder
             ['title' => 'Printer output has faded text', 'priority' => TicketPriority::Medium, 'location' => 'Administration Office', 'target' => TicketStatus::Assigned],
             ['title' => 'Projector HDMI signal not detected', 'priority' => TicketPriority::High, 'location' => 'Room A-204', 'target' => TicketStatus::InProgress],
             ['title' => 'Password reset request for portal account', 'priority' => TicketPriority::Low, 'location' => 'Student Service Desk', 'target' => TicketStatus::Cancelled],
-            ['title' => 'Accounting software fails to launch', 'priority' => TicketPriority::Critical, 'location' => 'Finance Office', 'target' => TicketStatus::Assigned],
-            ['title' => 'Mouse and keyboard intermittently disconnect', 'priority' => TicketPriority::Medium, 'location' => 'Computer Lab 1', 'target' => TicketStatus::Open],
-            ['title' => 'Cannot access shared network folder', 'priority' => TicketPriority::High, 'location' => 'HR Department', 'target' => TicketStatus::InProgress],
+            ['title' => 'Accounting software fails to launch', 'priority' => TicketPriority::Critical, 'location' => 'Finance Office', 'target' => TicketStatus::Resolved],
+            ['title' => 'Mouse and keyboard intermittently disconnect', 'priority' => TicketPriority::Medium, 'location' => 'Computer Lab 1', 'target' => TicketStatus::Closed],
+            ['title' => 'Cannot access shared network folder', 'priority' => TicketPriority::High, 'location' => 'HR Department', 'target' => TicketStatus::Reopened],
             ['title' => 'Monitor shows flickering image', 'priority' => TicketPriority::Low, 'location' => 'Room B-112', 'target' => TicketStatus::Open],
             ['title' => 'Email client keeps asking for password', 'priority' => TicketPriority::Medium, 'location' => 'Faculty Office', 'target' => TicketStatus::Assigned],
             ['title' => 'New user workstation needs setup', 'priority' => TicketPriority::Low, 'location' => 'IT Office', 'target' => TicketStatus::Cancelled],
-            ['title' => 'Scanner driver is missing', 'priority' => TicketPriority::Medium, 'location' => 'Archive Room', 'target' => TicketStatus::Open],
-            ['title' => 'Classroom speaker has no sound', 'priority' => TicketPriority::High, 'location' => 'Room C-301', 'target' => TicketStatus::InProgress],
+            ['title' => 'Scanner driver is missing', 'priority' => TicketPriority::Medium, 'location' => 'Archive Room', 'target' => TicketStatus::Resolved],
+            ['title' => 'Classroom speaker has no sound', 'priority' => TicketPriority::High, 'location' => 'Room C-301', 'target' => TicketStatus::Closed],
         ];
 
         foreach ($tickets as $index => $ticketData) {
@@ -71,7 +71,7 @@ class TicketSeeder extends Seeder
                 $ticket = $workflow->createTicket($requesters[$index % $requesters->count()], [
                     'ticket_category_id' => $categories[$index % $categories->count()]->id,
                     'title' => $ticketData['title'],
-                    'description' => 'Demo report for '.$ticketData['title'].'. This ticket demonstrates Milestone 3 assignment and workflow states.',
+                    'description' => 'Demo report for '.$ticketData['title'].'. This ticket demonstrates DelDesk ticket collaboration and workflow states.',
                     'location' => $ticketData['location'],
                     'priority' => $ticketData['priority'],
                 ]);
@@ -83,23 +83,77 @@ class TicketSeeder extends Seeder
 
             $technician = $technicians[$index % $technicians->count()];
 
-            if ($ticketData['target'] === TicketStatus::Assigned && $ticket->isOpenAndUnassigned()) {
-                $workflow->assign($ticket, $admin, $technician);
-            }
-
-            if ($ticketData['target'] === TicketStatus::InProgress) {
+            if (in_array($ticketData['target'], [
+                TicketStatus::Assigned,
+                TicketStatus::InProgress,
+                TicketStatus::Resolved,
+                TicketStatus::Closed,
+                TicketStatus::Reopened,
+            ], true)) {
                 if ($ticket->isOpenAndUnassigned()) {
                     $ticket = $workflow->assign($ticket, $admin, $technician);
                 }
+            }
 
-                if ($ticket->status === TicketStatus::Assigned && $ticket->technician_id === $technician->id) {
-                    $workflow->startWork($ticket, $technician);
+            if (in_array($ticketData['target'], [
+                TicketStatus::InProgress,
+                TicketStatus::Resolved,
+                TicketStatus::Closed,
+                TicketStatus::Reopened,
+            ], true)) {
+                if ($ticket->refresh()->status === TicketStatus::Assigned && $ticket->technician_id === $technician->id) {
+                    $ticket = $workflow->startWork($ticket, $technician);
                 }
             }
 
-            if ($ticketData['target'] === TicketStatus::Cancelled && in_array($ticket->status, [TicketStatus::Open, TicketStatus::Assigned], true)) {
-                $workflow->cancel($ticket, $admin, 'Demo cancellation for a duplicate or no longer needed request.');
+            if (in_array($ticketData['target'], [
+                TicketStatus::Resolved,
+                TicketStatus::Closed,
+                TicketStatus::Reopened,
+            ], true)) {
+                if ($ticket->refresh()->status === TicketStatus::InProgress && $ticket->technician_id === $technician->id) {
+                    $ticket = $workflow->resolve($ticket, $technician, 'Demo resolution: verified the issue and restored normal service.');
+                }
             }
+
+            if ($ticketData['target'] === TicketStatus::Closed && $ticket->refresh()->status === TicketStatus::Resolved) {
+                $ticket = $workflow->close($ticket, $admin);
+            }
+
+            if ($ticketData['target'] === TicketStatus::Reopened && $ticket->refresh()->status === TicketStatus::Resolved) {
+                $ticket = $workflow->reopen($ticket, $ticket->requester, 'The same issue returned during validation.');
+            }
+
+            if ($ticketData['target'] === TicketStatus::Cancelled && in_array($ticket->refresh()->status, [TicketStatus::Open, TicketStatus::Assigned], true)) {
+                $ticket = $workflow->cancel($ticket, $admin, 'Demo cancellation for a duplicate or no longer needed request.');
+            }
+
+            $this->seedComments($ticket->refresh(), $admin, $technicians);
+        }
+    }
+
+    /**
+     * @param  Collection<int, User>  $technicians
+     */
+    private function seedComments(Ticket $ticket, User $admin, Collection $technicians): void
+    {
+        $ticket->comments()->firstOrCreate([
+            'user_id' => $ticket->requester_id,
+            'body' => 'Could you please check this when available?',
+        ]);
+
+        if ($ticket->technician_id !== null) {
+            $ticket->comments()->firstOrCreate([
+                'user_id' => $ticket->technician_id,
+                'body' => 'I have reviewed the report and will update the ticket after troubleshooting.',
+            ]);
+        }
+
+        if ($technicians->isNotEmpty() && ! $ticket->status->isTerminal()) {
+            $ticket->comments()->firstOrCreate([
+                'user_id' => $admin->id,
+                'body' => 'Please keep this thread focused on the reported issue and next action.',
+            ]);
         }
     }
 }

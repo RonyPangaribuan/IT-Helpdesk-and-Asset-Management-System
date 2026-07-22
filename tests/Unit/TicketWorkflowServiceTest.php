@@ -19,9 +19,16 @@ class TicketWorkflowServiceTest extends TestCase
     public function test_transition_map_identifies_valid_and_invalid_transitions(): void
     {
         $this->assertTrue(TicketStatus::Open->canTransitionTo(TicketStatus::Assigned));
+        $this->assertTrue(TicketStatus::Open->canTransitionTo(TicketStatus::Cancelled));
         $this->assertTrue(TicketStatus::Assigned->canTransitionTo(TicketStatus::InProgress));
+        $this->assertTrue(TicketStatus::InProgress->canTransitionTo(TicketStatus::Resolved));
+        $this->assertTrue(TicketStatus::Resolved->canTransitionTo(TicketStatus::Closed));
+        $this->assertTrue(TicketStatus::Resolved->canTransitionTo(TicketStatus::Reopened));
+        $this->assertTrue(TicketStatus::Reopened->canTransitionTo(TicketStatus::Assigned));
+        $this->assertTrue(TicketStatus::Reopened->canTransitionTo(TicketStatus::InProgress));
         $this->assertFalse(TicketStatus::Open->canTransitionTo(TicketStatus::InProgress));
         $this->assertFalse(TicketStatus::Assigned->canTransitionTo(TicketStatus::Closed));
+        $this->assertFalse(TicketStatus::Closed->canTransitionTo(TicketStatus::Reopened));
     }
 
     public function test_cancelled_and_closed_are_terminal_states(): void

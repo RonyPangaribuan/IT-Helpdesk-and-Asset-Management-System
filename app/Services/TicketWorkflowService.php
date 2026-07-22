@@ -68,10 +68,13 @@ class TicketWorkflowService
 
             $this->ensureAdmin($actor);
             $this->ensureActiveTechnician($technician);
-            $this->ensureStatus($lockedTicket, TicketStatus::Assigned, 'Only assigned tickets can be reassigned.');
 
             if ($lockedTicket->technician_id === null) {
                 throw InvalidTicketTransitionException::withMessage('Only assigned tickets can be reassigned.');
+            }
+
+            if (! in_array($lockedTicket->status, [TicketStatus::Assigned, TicketStatus::Reopened], true)) {
+                throw InvalidTicketTransitionException::withMessage('Only assigned or reopened tickets can be reassigned.');
             }
 
             if ($lockedTicket->technician_id === $technician->id) {
@@ -80,16 +83,18 @@ class TicketWorkflowService
 
             $previousTechnician = $lockedTicket->technician?->name ?? 'Unassigned';
             $oldStatus = $lockedTicket->status;
+            $newStatus = $oldStatus === TicketStatus::Reopened ? TicketStatus::Assigned : $oldStatus;
 
             $lockedTicket->forceFill([
                 'technician_id' => $technician->id,
+                'status' => $newStatus,
             ])->save();
 
             $this->recordHistory(
                 ticket: $lockedTicket,
                 actor: $actor,
                 oldStatus: $oldStatus,
-                newStatus: $oldStatus,
+                newStatus: $newStatus,
                 note: 'Reassigned from '.$previousTechnician.' to '.$technician->name,
             );
 
@@ -106,7 +111,9 @@ class TicketWorkflowService
                 throw InvalidTicketTransitionException::withMessage('Only the assigned technician can start work.');
             }
 
-            $this->ensureStatus($lockedTicket, TicketStatus::Assigned, 'Only assigned tickets can be started.');
+            if (! in_array($lockedTicket->status, [TicketStatus::Assigned, TicketStatus::Reopened], true)) {
+                throw InvalidTicketTransitionException::withMessage('Only assigned or reopened tickets can be started.');
+            }
 
             if ($lockedTicket->technician_id !== $actor->id) {
                 throw InvalidTicketTransitionException::withMessage('Only the assigned technician can start work.');
@@ -116,7 +123,7 @@ class TicketWorkflowService
                 ticket: $lockedTicket,
                 actor: $actor,
                 targetStatus: TicketStatus::InProgress,
-                note: 'Started work',
+                note: $lockedTicket->status === TicketStatus::Reopened ? 'Resumed work' : 'Started work',
             );
         });
     }
@@ -147,14 +154,79 @@ class TicketWorkflowService
         });
     }
 
-    public function transitionStatus(Ticket $ticket, User $actor, TicketStatus $targetStatus, ?string $note = null): Ticket
+    public function resolve(Ticket $ticket, User $actor, string $resolutionNote): Ticket
     {
-        return DB::transaction(function () use ($actor, $note, $targetStatus, $ticket): Ticket {
+        return DB::transaction(function () use ($actor, $resolutionNote, $ticket): Ticket {
+            $lockedTicket = $this->lockedTicket($ticket);
+
+            if (! $actor->isTechnician() || $lockedTicket->technician_id !== $actor->id) {
+                throw InvalidTicketTransitionException::withMessage('Only the assigned technician can resolve this ticket.');
+            }
+
+            $this->ensureStatus($lockedTicket, TicketStatus::InProgress, 'Only in-progress tickets can be resolved.');
+
             return $this->transition(
-                ticket: $this->lockedTicket($ticket),
+                ticket: $lockedTicket,
                 actor: $actor,
-                targetStatus: $targetStatus,
-                note: $note,
+                targetStatus: TicketStatus::Resolved,
+                note: $resolutionNote,
+                updates: [
+                    'resolution_note' => $resolutionNote,
+                    'resolved_at' => now(),
+                    'closed_at' => null,
+                ],
+            );
+        });
+    }
+
+    public function close(Ticket $ticket, User $actor): Ticket
+    {
+        return DB::transaction(function () use ($actor, $ticket): Ticket {
+            $lockedTicket = $this->lockedTicket($ticket);
+
+            if (! $actor->isAdmin() && ! ($actor->isRequester() && $lockedTicket->requester_id === $actor->id)) {
+                throw InvalidTicketTransitionException::withMessage('Only the requester or an administrator can close this ticket.');
+            }
+
+            $this->ensureStatus($lockedTicket, TicketStatus::Resolved, 'Only resolved tickets can be closed.');
+
+            if ($lockedTicket->resolution_note === null || $lockedTicket->resolved_at === null) {
+                throw InvalidTicketTransitionException::withMessage('Resolved tickets require a resolution note before closing.');
+            }
+
+            return $this->transition(
+                ticket: $lockedTicket,
+                actor: $actor,
+                targetStatus: TicketStatus::Closed,
+                note: $actor->isAdmin() ? 'Closed by administrator' : 'Resolution confirmed by requester',
+                updates: [
+                    'closed_at' => now(),
+                ],
+            );
+        });
+    }
+
+    public function reopen(Ticket $ticket, User $actor, string $reason): Ticket
+    {
+        return DB::transaction(function () use ($actor, $reason, $ticket): Ticket {
+            $lockedTicket = $this->lockedTicket($ticket);
+
+            if (! $actor->isRequester() || $lockedTicket->requester_id !== $actor->id) {
+                throw InvalidTicketTransitionException::withMessage('Only the requester can reopen this ticket.');
+            }
+
+            $this->ensureStatus($lockedTicket, TicketStatus::Resolved, 'Only resolved tickets can be reopened.');
+
+            return $this->transition(
+                ticket: $lockedTicket,
+                actor: $actor,
+                targetStatus: TicketStatus::Reopened,
+                note: $reason,
+                updates: [
+                    'resolution_note' => null,
+                    'resolved_at' => null,
+                    'closed_at' => null,
+                ],
             );
         });
     }
@@ -183,6 +255,7 @@ class TicketWorkflowService
         TicketStatus $targetStatus,
         ?string $note,
         ?User $technician = null,
+        array $updates = [],
     ): Ticket {
         $oldStatus = $ticket->status;
 
@@ -190,7 +263,7 @@ class TicketWorkflowService
             throw InvalidTicketTransitionException::withMessage($oldStatus->label().' tickets cannot be modified.');
         }
 
-        if (! $oldStatus->canTransitionTo($targetStatus) || ! $oldStatus->canTransitionToInMilestoneThree($targetStatus)) {
+        if (! $oldStatus->canTransitionTo($targetStatus)) {
             throw InvalidTicketTransitionException::withMessage('This status transition is not allowed.');
         }
 
@@ -202,7 +275,10 @@ class TicketWorkflowService
             throw InvalidTicketTransitionException::withMessage('Only assigned tickets can be started.');
         }
 
-        $updates = ['status' => $targetStatus];
+        $updates = [
+            ...$updates,
+            'status' => $targetStatus,
+        ];
 
         if ($technician instanceof User) {
             $updates['technician_id'] = $technician->id;
