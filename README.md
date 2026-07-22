@@ -29,6 +29,10 @@ php artisan test
 
 Use `npm.cmd` on Windows PowerShell if the `npm.ps1` shim is blocked by execution policy.
 
+## Continuous Integration
+
+Pull requests targeting `master` are checked by the `CI` GitHub Actions workflow. The workflow runs Laravel migration and seeding, Laravel Pint formatting checks, the PHPUnit test suite, and a Vite production build.
+
 ## Demo Accounts
 
 All demo accounts use the password `password`.
