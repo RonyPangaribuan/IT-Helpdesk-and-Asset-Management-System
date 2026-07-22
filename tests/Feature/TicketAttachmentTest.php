@@ -17,7 +17,8 @@ class TicketAttachmentTest extends TestCase
 
     public function test_requester_can_create_ticket_with_private_attachments(): void
     {
-        Storage::fake('local');
+        $disk = (string) config('deldesk.attachment_disk');
+        Storage::fake($disk);
 
         $requester = User::factory()->requester()->create();
         $category = TicketCategory::factory()->create();
@@ -42,7 +43,7 @@ class TicketAttachmentTest extends TestCase
         $this->assertCount(2, $attachments);
 
         foreach ($attachments as $attachment) {
-            Storage::disk('local')->assertExists($attachment->file_path);
+            Storage::disk($disk)->assertExists($attachment->file_path);
             $this->assertStringStartsWith("ticket-attachments/{$ticket->id}/", $attachment->file_path);
             $this->assertNotSame($attachment->original_name, $attachment->stored_name);
             $this->assertSame($requester->id, $attachment->uploaded_by);
@@ -51,7 +52,8 @@ class TicketAttachmentTest extends TestCase
 
     public function test_assigned_technician_can_upload_attachments_but_admin_and_unrelated_users_cannot(): void
     {
-        Storage::fake('local');
+        $disk = (string) config('deldesk.attachment_disk');
+        Storage::fake($disk);
 
         $admin = User::factory()->admin()->create();
         $requester = User::factory()->requester()->create();
@@ -93,12 +95,12 @@ class TicketAttachmentTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseCount('ticket_attachments', 1);
-        Storage::disk('local')->assertExists(TicketAttachment::firstOrFail()->file_path);
+        Storage::disk($disk)->assertExists(TicketAttachment::firstOrFail()->file_path);
     }
 
     public function test_attachment_validation_rejects_unsupported_or_oversized_files(): void
     {
-        Storage::fake('local');
+        Storage::fake((string) config('deldesk.attachment_disk'));
 
         $requester = User::factory()->requester()->create();
         $ticket = Ticket::factory()->forRequester($requester)->open()->create();
@@ -126,9 +128,10 @@ class TicketAttachmentTest extends TestCase
         $this->assertDatabaseCount('ticket_attachments', 0);
     }
 
-    public function test_attachment_download_is_authorized_and_uses_local_storage(): void
+    public function test_attachment_download_is_authorized_and_uses_configured_private_storage(): void
     {
-        Storage::fake('local');
+        $disk = (string) config('deldesk.attachment_disk');
+        Storage::fake($disk);
 
         $admin = User::factory()->admin()->create();
         $requester = User::factory()->requester()->create();
@@ -138,7 +141,7 @@ class TicketAttachmentTest extends TestCase
         $ticket = Ticket::factory()->forRequester($requester)->assignedTo($technician)->create();
         $path = "ticket-attachments/{$ticket->id}/private-note.pdf";
 
-        Storage::disk('local')->put($path, 'private file');
+        Storage::disk($disk)->put($path, 'private file');
 
         $attachment = TicketAttachment::factory()
             ->for($ticket)
@@ -180,7 +183,7 @@ class TicketAttachmentTest extends TestCase
 
     public function test_attachment_upload_is_unavailable_after_ticket_is_closed_or_cancelled(): void
     {
-        Storage::fake('local');
+        Storage::fake((string) config('deldesk.attachment_disk'));
 
         $requester = User::factory()->requester()->create();
         $technician = User::factory()->technician()->create();

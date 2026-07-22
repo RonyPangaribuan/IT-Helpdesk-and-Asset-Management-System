@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use App\Models\TicketAttachment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -13,6 +14,17 @@ use Illuminate\Support\Str;
  */
 class TicketAttachmentFactory extends Factory
 {
+    public function configure(): static
+    {
+        return $this->afterCreating(function (TicketAttachment $attachment): void {
+            $disk = (string) config('deldesk.attachment_disk', 'local');
+
+            if (! Storage::disk($disk)->exists($attachment->file_path)) {
+                Storage::disk($disk)->put($attachment->file_path, 'DelDesk test attachment.');
+            }
+        });
+    }
+
     /**
      * Define the model's default state.
      *
@@ -27,7 +39,7 @@ class TicketAttachmentFactory extends Factory
             'uploaded_by' => User::factory(),
             'original_name' => 'supporting-document.pdf',
             'stored_name' => $storedName,
-            'file_path' => 'ticket-attachments/1/'.$storedName,
+            'file_path' => 'ticket-attachments/'.fake()->numberBetween(1, 9999).'/'.$storedName,
             'mime_type' => 'application/pdf',
             'file_size' => 128000,
         ];

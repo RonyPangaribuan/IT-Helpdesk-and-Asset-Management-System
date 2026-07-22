@@ -153,10 +153,67 @@
 
 ## Milestone 6: Quality And Release
 
-- [ ] Lengkapi seed demo minimal sesuai PRD.
-- [ ] Lengkapi factory untuk data realistis.
-- [ ] Poles responsive UI.
-- [ ] Tambahkan README instalasi dan demo account.
-- [ ] Tambahkan ERD dan screenshot.
-- [ ] Siapkan deployment.
-- [ ] Jalankan test penuh sebelum rilis.
+- [x] Audit PRD terhadap implementasi.
+- [x] Buat `docs/PRD_COMPLIANCE.md`.
+- [x] Implementasi admin user management.
+- [x] Tambahkan `UserPolicy`.
+- [x] Tambahkan `StoreUserRequest` dan `UpdateUserRequest`.
+- [x] Tambahkan `UserManagementService`.
+- [x] Tambahkan user list dengan search, role filter, active filter, pagination, dan empty state.
+- [x] Tambahkan create user untuk admin, technician, dan requester.
+- [x] Tambahkan update user dengan optional password reset.
+- [x] Cegah admin menonaktifkan atau menurunkan role dirinya sendiri.
+- [x] Cegah last active admin dinonaktifkan atau diubah role.
+- [x] Cegah technician dengan active assigned ticket dinonaktifkan.
+- [x] Cegah role change yang merusak dependency requester/technician.
+- [x] Pastikan tidak ada route delete/restore/force-delete user management.
+- [x] Terapkan login hanya untuk active user.
+- [x] Tambahkan middleware `EnsureUserIsActive`.
+- [x] Tambahkan alias middleware `active`.
+- [x] Terapkan `active` pada protected routes.
+- [x] Logout dan invalidasi session user yang dinonaktifkan saat masih login.
+- [x] Tambahkan `config/deldesk.php` untuk private attachment disk.
+- [x] Perbarui attachment service/controller/test agar tidak hard-code disk.
+- [x] Tambahkan `TICKET_ATTACHMENT_DISK=local` ke `.env.example`.
+- [x] Perbarui demo seed data menjadi 24 tickets.
+- [x] Pastikan demo seed mencakup semua status dan priority.
+- [x] Pastikan demo seed mencakup comments dan status histories konsisten.
+- [x] Audit dan lengkapi factory states.
+- [x] Tambahkan factory attachment yang membuat private file fisik.
+- [x] Tambahkan unit test ticket code generator.
+- [x] Tambahkan `DemoDataSeederTest`.
+- [x] Tambahkan test user management.
+- [x] Tambahkan test inactive authentication.
+- [x] Tambahkan test security headers.
+- [x] Tambahkan test configurable attachment disk.
+- [x] Tambahkan test custom error pages.
+- [x] Tambahkan test route cache compatibility.
+- [x] Tambahkan middleware `AddSecurityHeaders`.
+- [x] Tambahkan custom error pages 403, 404, 419, dan 500.
+- [x] Ganti root route closure menjadi cache-safe `Route::view`.
+- [x] Ganti landing page default menjadi branded DelDesk landing page.
+- [x] Perbarui navigation desktop dan mobile dengan menu Users untuk admin.
+- [x] Tambahkan basic accessibility polish untuk flash messages.
+- [x] Bersihkan separator encoding pada partial ticket.
+- [x] Perbarui CI dengan `composer audit --locked`.
+- [x] Perbarui CI dengan config/route/view cache checks.
+- [x] Buat `.env.production.example`.
+- [x] Tulis ulang README final.
+- [x] Buat `docs/ERD.md`.
+- [x] Buat `docs/ARCHITECTURE.md`.
+- [x] Buat `docs/DEPLOYMENT.md`.
+- [x] Buat `docs/SCREENSHOT_CHECKLIST.md`.
+- [x] Buat folder `docs/screenshots/`.
+- [x] Buat `docs/DEMO_SCRIPT.md`.
+- [x] Buat `docs/RELEASE_CHECKLIST.md`.
+- [x] Tambahkan `LICENSE`.
+- [x] Tambahkan `CHANGELOG.md`.
+- [x] Tambahkan `SECURITY.md`.
+- [ ] Capture real screenshots.
+- [ ] Record demo video.
+- [ ] Complete external deployment.
+- [ ] Run production smoke test.
+- [ ] Confirm CI green after push.
+- [ ] Create tag `v1.0.0`.
+- [ ] Create GitHub Release.
+- [ ] Jalankan final verification penuh sebelum merge.

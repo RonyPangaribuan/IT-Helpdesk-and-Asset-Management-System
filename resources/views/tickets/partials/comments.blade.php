@@ -10,7 +10,7 @@
                 <div class="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <p class="text-sm font-semibold text-stone-950">{{ $comment->author->name }}</p>
-                        <p class="text-xs uppercase text-stone-500">{{ ucfirst($comment->author->role) }} · {{ $comment->created_at->format('d M Y H:i') }}{{ $comment->wasEdited() ? ' · edited' : '' }}</p>
+                        <p class="text-xs uppercase text-stone-500">{{ ucfirst($comment->author->role) }} / {{ $comment->created_at->format('d M Y H:i') }}{{ $comment->wasEdited() ? ' / edited' : '' }}</p>
                     </div>
                     @can('delete', $comment)
                         <form method="POST" action="{{ route('tickets.comments.destroy', [$ticket, $comment]) }}" onsubmit="return confirm('Delete this comment?');">
@@ -20,7 +20,7 @@
                         </form>
                     @endcan
                 </div>
-                <p class="mt-3 whitespace-pre-line text-sm leading-6 text-stone-800">{{ $comment->body }}</p>
+                <p class="mt-3 whitespace-pre-line break-words text-sm leading-6 text-stone-800">{{ $comment->body }}</p>
                 @can('update', $comment)
                     <details class="mt-3">
                         <summary class="cursor-pointer text-sm font-medium text-teal-700 hover:text-teal-800">Edit comment</summary>

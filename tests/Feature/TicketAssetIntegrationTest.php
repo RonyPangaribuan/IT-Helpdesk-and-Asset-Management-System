@@ -219,7 +219,8 @@ class TicketAssetIntegrationTest extends TestCase
 
     public function test_ticket_creation_with_attachment_and_asset_is_atomic(): void
     {
-        Storage::fake('local');
+        $disk = (string) config('deldesk.attachment_disk');
+        Storage::fake($disk);
 
         $requester = User::factory()->requester()->create();
         $category = TicketCategory::factory()->create();
@@ -238,9 +239,9 @@ class TicketAssetIntegrationTest extends TestCase
 
         $this->assertSame($asset->id, $ticket->asset_id);
         $this->assertDatabaseCount('ticket_attachments', 1);
-        Storage::disk('local')->assertExists($ticket->attachments()->firstOrFail()->file_path);
+        Storage::disk($disk)->assertExists($ticket->attachments()->firstOrFail()->file_path);
 
-        Storage::fake('local');
+        Storage::fake($disk);
 
         $this->actingAs($requester)
             ->from(route('tickets.create'))

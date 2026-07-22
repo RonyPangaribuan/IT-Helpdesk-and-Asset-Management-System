@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -38,6 +39,59 @@ class AuthenticationTest extends TestCase
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
+
+        $this->assertGuest();
+    }
+
+    public function test_inactive_user_cannot_authenticate_and_failure_is_generic(): void
+    {
+        $user = User::factory()->inactive()->create();
+
+        $response = $this->from('/login')->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertGuest();
+        $response
+            ->assertRedirect('/login')
+            ->assertSessionHasErrors(['email' => trans('auth.failed')]);
+    }
+
+    public function test_inactive_user_login_attempts_are_rate_limited(): void
+    {
+        RateLimiter::clear('inactive@example.test|127.0.0.1');
+
+        User::factory()->inactive()->create(['email' => 'inactive@example.test']);
+
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $this->from('/login')->post('/login', [
+                'email' => 'inactive@example.test',
+                'password' => 'password',
+            ]);
+        }
+
+        $this->from('/login')
+            ->post('/login', [
+                'email' => 'inactive@example.test',
+                'password' => 'password',
+            ])
+            ->assertRedirect('/login')
+            ->assertSessionHasErrors('email');
+    }
+
+    public function test_user_disabled_after_login_is_logged_out_and_session_is_invalidated(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->withSession(['probe' => 'value']);
+
+        $user->forceFill(['is_active' => false])->save();
+
+        $this->get('/dashboard')
+            ->assertRedirect('/login')
+            ->assertSessionMissing('probe');
 
         $this->assertGuest();
     }

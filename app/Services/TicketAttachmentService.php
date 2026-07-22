@@ -14,9 +14,11 @@ use Throwable;
 
 class TicketAttachmentService
 {
+    private readonly string $disk;
+
     public function __construct(private readonly TicketWorkflowService $workflow)
     {
-        //
+        $this->disk = (string) config('deldesk.attachment_disk', 'local');
     }
 
     /**
@@ -74,7 +76,7 @@ class TicketAttachmentService
             $storedName = Str::uuid()->toString().'.'.$extension;
             $path = "ticket-attachments/{$ticket->id}/{$storedName}";
 
-            Storage::disk('local')->putFileAs("ticket-attachments/{$ticket->id}", $file, $storedName);
+            Storage::disk($this->disk)->putFileAs("ticket-attachments/{$ticket->id}", $file, $storedName);
             $storedPaths[] = $path;
 
             $attachments->push(TicketAttachment::create([
@@ -97,7 +99,7 @@ class TicketAttachmentService
     private function deleteStoredPaths(array $storedPaths): void
     {
         foreach ($storedPaths as $path) {
-            Storage::disk('local')->delete($path);
+            Storage::disk($this->disk)->delete($path);
         }
     }
 }

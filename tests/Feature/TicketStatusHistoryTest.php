@@ -88,7 +88,7 @@ class TicketStatusHistoryTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
-        $this->assertDatabaseCount('tickets', 12);
+        $this->assertDatabaseCount('tickets', 24);
         $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::Open->value)->count());
         $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::Assigned->value)->count());
         $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::InProgress->value)->count());

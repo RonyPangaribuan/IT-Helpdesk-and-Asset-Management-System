@@ -258,7 +258,7 @@ class TicketCrudTest extends TestCase
             ->assertDontSee($ticket->ticket_code);
     }
 
-    public function test_user_with_ticket_gets_validation_error_when_deleting_profile(): void
+    public function test_user_with_ticket_can_deactivate_profile_without_deleting_history(): void
     {
         $requester = User::factory()->requester()->create();
         $category = TicketCategory::factory()->create();
@@ -267,11 +267,14 @@ class TicketCrudTest extends TestCase
         $this->actingAs($requester)
             ->from('/profile')
             ->delete('/profile', ['password' => 'password'])
-            ->assertRedirect('/profile')
-            ->assertSessionHasErrorsIn('userDeletion', 'password');
+            ->assertRedirect('/login')
+            ->assertSessionHasNoErrors();
 
-        $this->assertAuthenticatedAs($requester);
         $this->assertNotNull($requester->fresh());
+        $this->assertFalse($requester->fresh()->is_active);
+        $this->assertDatabaseHas('tickets', [
+            'requester_id' => $requester->id,
+        ]);
     }
 
     /**

@@ -63,6 +63,18 @@ class TicketSeeder extends Seeder
             ['title' => 'New user workstation needs setup', 'priority' => TicketPriority::Low, 'location' => 'IT Office', 'target' => TicketStatus::Cancelled, 'asset_code' => 'AST-DES-001'],
             ['title' => 'Scanner driver is missing', 'priority' => TicketPriority::Medium, 'location' => 'Archive Room', 'target' => TicketStatus::Resolved, 'asset_code' => 'AST-PRN-002'],
             ['title' => 'Classroom speaker has no sound', 'priority' => TicketPriority::High, 'location' => 'Room C-301', 'target' => TicketStatus::Closed, 'asset_code' => 'AST-PRJ-002'],
+            ['title' => 'Lab PC cannot boot after update', 'priority' => TicketPriority::Critical, 'location' => 'Computer Lab 1', 'target' => TicketStatus::Open, 'asset_code' => 'AST-DES-001'],
+            ['title' => 'Access point coverage drops near reading area', 'priority' => TicketPriority::High, 'location' => 'Library Floor 2', 'target' => TicketStatus::Assigned, 'asset_code' => 'AST-NET-002'],
+            ['title' => 'Faculty laptop battery drains quickly', 'priority' => TicketPriority::Medium, 'location' => 'Faculty Office', 'target' => TicketStatus::InProgress, 'asset_code' => 'AST-LAP-002'],
+            ['title' => 'Student account cannot access LMS', 'priority' => TicketPriority::High, 'location' => 'Student Service Desk', 'target' => TicketStatus::Resolved, 'asset_code' => null],
+            ['title' => 'Archive scanner paper feed jams', 'priority' => TicketPriority::Medium, 'location' => 'Archive Room', 'target' => TicketStatus::Closed, 'asset_code' => 'AST-PRN-002'],
+            ['title' => 'Room C projector lamp warning appears', 'priority' => TicketPriority::Low, 'location' => 'Room C-301', 'target' => TicketStatus::Reopened, 'asset_code' => 'AST-PRJ-002'],
+            ['title' => 'Temporary software install request cancelled', 'priority' => TicketPriority::Low, 'location' => 'Room B-112', 'target' => TicketStatus::Cancelled, 'asset_code' => null],
+            ['title' => 'Finance desktop blue screen during startup', 'priority' => TicketPriority::Critical, 'location' => 'Finance Office', 'target' => TicketStatus::InProgress, 'asset_code' => 'AST-DES-002'],
+            ['title' => 'Main router CPU usage spike', 'priority' => TicketPriority::Critical, 'location' => 'Server Room', 'target' => TicketStatus::Resolved, 'asset_code' => 'AST-NET-001'],
+            ['title' => 'Lab monitor color calibration issue', 'priority' => TicketPriority::Low, 'location' => 'Room B-112', 'target' => TicketStatus::Assigned, 'asset_code' => 'AST-PER-001'],
+            ['title' => 'Printer queue stuck for administration staff', 'priority' => TicketPriority::High, 'location' => 'Administration Office', 'target' => TicketStatus::Closed, 'asset_code' => 'AST-PRN-001'],
+            ['title' => 'Classroom HDMI cable replacement request', 'priority' => TicketPriority::Medium, 'location' => 'Room A-204', 'target' => TicketStatus::Open, 'asset_code' => 'AST-PRJ-001'],
         ];
 
         $assetsByCode = Asset::withTrashed()

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AssetCategoryController;
 use App\Http\Controllers\Admin\TicketCategoryController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -12,15 +13,13 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketWorkflowController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome')->name('home');
 
 Route::get('/dashboard', DashboardController::class)
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'active', 'verified'])
     ->name('dashboard');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('/admin/dashboard', DashboardController::class)
         ->middleware('role:admin')
         ->name('dashboard.admin');
@@ -70,6 +69,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->except('show');
             Route::resource('asset-categories', AssetCategoryController::class)
                 ->except('show');
+            Route::resource('users', UserController::class)
+                ->only(['index', 'create', 'store', 'edit', 'update']);
         });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

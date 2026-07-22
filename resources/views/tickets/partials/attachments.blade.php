@@ -7,10 +7,10 @@
     <div class="mt-5 space-y-3">
         @forelse ($ticket->attachments as $attachment)
             <div class="flex flex-col gap-2 border-b border-stone-100 pb-3 last:border-b-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <a href="{{ route('ticket-attachments.download', $attachment) }}" class="text-sm font-semibold text-teal-700 hover:text-teal-800">{{ $attachment->original_name }}</a>
+                <div class="min-w-0">
+                    <a href="{{ route('ticket-attachments.download', $attachment) }}" class="break-all text-sm font-semibold text-teal-700 hover:text-teal-800">{{ $attachment->original_name }}</a>
                     <p class="mt-1 text-xs text-stone-500">
-                        Uploaded by {{ $attachment->uploader->name }} · {{ $attachment->created_at->format('d M Y H:i') }} · {{ number_format($attachment->file_size / 1024, 1) }} KB
+                        Uploaded by {{ $attachment->uploader->name }} / {{ $attachment->created_at->format('d M Y H:i') }} / {{ number_format($attachment->file_size / 1024, 1) }} KB
                     </p>
                 </div>
                 <a href="{{ route('ticket-attachments.download', $attachment) }}" class="inline-flex items-center rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 shadow-sm hover:border-teal-300 hover:text-teal-700">Download</a>
