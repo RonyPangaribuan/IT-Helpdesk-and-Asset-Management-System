@@ -5,14 +5,23 @@
     $label = $priority instanceof \App\Enums\TicketPriority ? $priority->label() : ucfirst($value);
 
     $classes = match ($value) {
-        'low' => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-        'medium' => 'bg-sky-50 text-sky-700 ring-sky-200',
-        'high' => 'bg-amber-50 text-amber-800 ring-amber-200',
+        'low' => 'bg-slate-100 text-slate-700 ring-slate-300',
+        'medium' => 'bg-blue-50 text-blue-700 ring-blue-200',
+        'high' => 'bg-orange-50 text-orange-700 ring-orange-200',
         'critical' => 'bg-red-50 text-red-700 ring-red-200',
-        default => 'bg-stone-100 text-stone-700 ring-stone-300',
+        default => 'bg-slate-100 text-slate-700 ring-slate-300',
+    };
+
+    $dotClasses = match ($value) {
+        'low' => 'bg-slate-400',
+        'medium' => 'bg-blue-500',
+        'high' => 'bg-orange-500',
+        'critical' => 'bg-red-500',
+        default => 'bg-slate-400',
     };
 @endphp
 
-<span {{ $attributes->merge(['class' => "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset {$classes}"]) }}>
+<span {{ $attributes->merge(['class' => "app-badge {$classes}"]) }}>
+    <span class="h-1.5 w-1.5 rounded-full {{ $dotClasses }}" aria-hidden="true"></span>
     {{ $label }}
 </span>

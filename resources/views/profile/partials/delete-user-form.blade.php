@@ -1,13 +1,7 @@
 <section class="space-y-6">
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Deactivate Account') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Deactivating your account signs you out and prevents future login. Existing ticket history remains available to authorized administrators for support records.') }}
-        </p>
-    </header>
+    <p class="text-sm leading-6 text-slate-600">
+        {{ __('Deactivating your account signs you out and prevents future login. Existing ticket history remains available to authorized administrators for support records.') }}
+    </p>
 
     <x-danger-button
         x-data=""
@@ -19,11 +13,11 @@
             @csrf
             @method('delete')
 
-            <h2 class="text-lg font-medium text-gray-900">
+            <h2 class="text-lg font-semibold text-slate-950">
                 {{ __('Are you sure you want to deactivate your account?') }}
             </h2>
 
-            <p class="mt-1 text-sm text-gray-600">
+            <p class="mt-2 text-sm leading-6 text-slate-600">
                 {{ __('Please enter your password to confirm. This will close your current session and require an administrator to reactivate your account later.') }}
             </p>
 
@@ -34,7 +28,7 @@
                     id="password"
                     name="password"
                     type="password"
-                    class="mt-1 block w-3/4"
+                    class="mt-1 block w-full"
                     placeholder="{{ __('Password') }}"
                 />
 

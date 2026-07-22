@@ -14,16 +14,38 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-stone-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
+    <body class="font-sans text-slate-900 antialiased">
+        <div class="min-h-screen bg-slate-50">
+            <div class="grid min-h-screen lg:grid-cols-[0.95fr_1.05fr]">
+                <section class="hidden bg-slate-950 px-10 py-10 text-white lg:flex lg:flex-col lg:justify-between">
+                    <a href="{{ route('home') }}" class="inline-flex items-center gap-3 text-white">
+                        <x-application-logo class="h-10 w-auto" />
+                    </a>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+                    <div class="max-w-md">
+                        <p class="text-sm font-medium text-indigo-200">IT Helpdesk and Asset Management</p>
+                        <h1 class="mt-4 text-3xl font-semibold tracking-tight">Support work, organized from login onward.</h1>
+                        <p class="mt-4 text-sm leading-6 text-slate-300">
+                            DelDesk keeps reports, assignments, comments, attachments, and asset history in one role-aware workspace.
+                        </p>
+                    </div>
+
+                    <p class="text-xs text-slate-400">Laravel monolith / Blade / Tailwind CSS</p>
+                </section>
+
+                <main class="flex min-h-screen flex-col justify-center px-4 py-8 sm:px-6 lg:px-12">
+                    <div class="mx-auto w-full max-w-md">
+                        <div class="mb-8 lg:hidden">
+                            <a href="{{ route('home') }}" class="inline-flex items-center gap-3 text-indigo-700">
+                                <x-application-logo class="h-10 w-auto" />
+                            </a>
+                        </div>
+
+                        <div class="app-card p-6 sm:p-8">
+                            {{ $slot }}
+                        </div>
+                    </div>
+                </main>
             </div>
         </div>
     </body>

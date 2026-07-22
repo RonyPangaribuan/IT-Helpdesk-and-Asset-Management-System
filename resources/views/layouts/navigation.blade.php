@@ -1,153 +1,157 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-stone-200">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto text-teal-700" />
-                    </a>
+@php
+    $user = Auth::user();
+    $ticketActive = request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit');
+
+    $navigationSections = [
+        [
+            'label' => 'Workspace',
+            'items' => [
+                ['label' => 'Dashboard', 'href' => route('dashboard'), 'active' => request()->routeIs('dashboard*')],
+                ['label' => $user->isRequester() ? 'My Tickets' : 'Tickets', 'href' => route('tickets.index'), 'active' => $ticketActive],
+            ],
+        ],
+    ];
+
+    if ($user->isRequester()) {
+        $navigationSections[0]['items'][] = ['label' => 'Create Ticket', 'href' => route('tickets.create'), 'active' => request()->routeIs('tickets.create')];
+    }
+
+    if ($user->isAdmin() || $user->isTechnician()) {
+        $navigationSections[0]['items'][] = ['label' => 'Assets', 'href' => route('assets.index'), 'active' => request()->routeIs('assets.*')];
+    }
+
+    if ($user->isAdmin()) {
+        $navigationSections[] = [
+            'label' => 'Management',
+            'items' => [
+                ['label' => 'Users', 'href' => route('admin.users.index'), 'active' => request()->routeIs('admin.users.*')],
+                ['label' => 'Ticket Categories', 'href' => route('admin.ticket-categories.index'), 'active' => request()->routeIs('admin.ticket-categories.*')],
+                ['label' => 'Asset Categories', 'href' => route('admin.asset-categories.index'), 'active' => request()->routeIs('admin.asset-categories.*')],
+            ],
+        ];
+    }
+
+    $navigationSections[] = [
+        'label' => 'Account',
+        'items' => [
+            ['label' => 'Profile', 'href' => route('profile.edit'), 'active' => request()->routeIs('profile.edit')],
+        ],
+    ];
+@endphp
+
+<div
+    id="mobile-sidebar"
+    class="relative z-50 lg:hidden"
+    x-show="sidebarOpen"
+    x-on:keydown.escape.window="sidebarOpen = false"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Mobile navigation"
+    style="display: none;"
+>
+    <div
+        class="fixed inset-0 bg-slate-900/45"
+        x-show="sidebarOpen"
+        x-transition.opacity
+        x-on:click="sidebarOpen = false"
+        aria-hidden="true"
+    ></div>
+
+    <aside
+        class="fixed inset-y-0 left-0 flex w-80 max-w-[calc(100vw-2rem)] flex-col border-r border-slate-200 bg-white shadow-xl"
+        x-show="sidebarOpen"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="-translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full"
+    >
+        <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-3 text-indigo-700">
+                <x-application-logo class="h-9 w-auto" />
+            </a>
+            <button
+                type="button"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                x-on:click="sidebarOpen = false"
+                aria-label="Close navigation menu"
+            >
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <nav class="flex-1 space-y-7 overflow-y-auto px-4 py-5" aria-label="Primary mobile navigation">
+            @foreach ($navigationSections as $section)
+                <div>
+                    <p class="px-3 text-xs font-semibold text-slate-400">{{ $section['label'] }}</p>
+                    <div class="mt-2 space-y-1">
+                        @foreach ($section['items'] as $item)
+                            <x-sidebar-link :href="$item['href']" :active="$item['active']" x-on:click="sidebarOpen = false">
+                                {{ $item['label'] }}
+                            </x-sidebar-link>
+                        @endforeach
+                    </div>
                 </div>
+            @endforeach
+        </nav>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard*')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')">
-                        {{ __('Tickets') }}
-                    </x-nav-link>
-                    @if (Auth::user()->isRequester())
-                        <x-nav-link :href="route('tickets.create')" :active="request()->routeIs('tickets.create')">
-                            {{ __('Create Ticket') }}
-                        </x-nav-link>
-                    @endif
-                    @if (Auth::user()->isAdmin() || Auth::user()->isTechnician())
-                        <x-nav-link :href="route('assets.index')" :active="request()->routeIs('assets.*')">
-                            {{ __('Assets') }}
-                        </x-nav-link>
-                    @endif
-                    @if (Auth::user()->isAdmin())
-                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                            {{ __('Users') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.ticket-categories.index')" :active="request()->routeIs('admin.ticket-categories.*')">
-                            {{ __('Ticket Categories') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.asset-categories.index')" :active="request()->routeIs('admin.asset-categories.*')">
-                            {{ __('Asset Categories') }}
-                        </x-nav-link>
-                    @endif
+        <div class="border-t border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+                <x-avatar :user="$user" />
+                <div class="min-w-0">
+                    <p class="truncate text-sm font-semibold text-slate-950">{{ $user->name }}</p>
+                    <p class="truncate text-xs text-slate-500">{{ $user->email }}</p>
+                    <p class="mt-1 text-xs font-medium text-indigo-700">{{ ucfirst($user->role) }}</p>
                 </div>
             </div>
+            <form method="POST" action="{{ route('logout') }}" class="mt-4">
+                @csrf
+                <button type="submit" class="app-button-secondary w-full">Log Out</button>
+            </form>
+        </div>
+    </aside>
+</div>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <span class="me-4 inline-flex items-center rounded-md bg-teal-50 px-2.5 py-1 text-xs font-medium uppercase text-teal-700 ring-1 ring-inset ring-teal-200">
-                    {{ Auth::user()->role }}
-                </span>
+<aside class="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col lg:border-r lg:border-slate-200 lg:bg-white">
+    <div class="flex h-full min-h-0 flex-col">
+        <div class="border-b border-slate-200 px-6 py-5">
+            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-3 text-indigo-700">
+                <x-application-logo class="h-10 w-auto" />
+            </a>
+            <p class="mt-3 text-xs leading-5 text-slate-500">IT support workspace for report, assignment, repair, and asset history.</p>
+        </div>
 
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-stone-600 bg-white hover:text-stone-900 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+        <nav class="flex-1 space-y-7 overflow-y-auto px-4 py-6" aria-label="Primary navigation">
+            @foreach ($navigationSections as $section)
+                <div>
+                    <p class="px-3 text-xs font-semibold text-slate-400">{{ $section['label'] }}</p>
+                    <div class="mt-2 space-y-1">
+                        @foreach ($section['items'] as $item)
+                            <x-sidebar-link :href="$item['href']" :active="$item['active']">
+                                {{ $item['label'] }}
+                            </x-sidebar-link>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </nav>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+        <div class="border-t border-slate-200 p-4">
+            <div class="flex items-center gap-3 rounded-lg bg-slate-50 p-3">
+                <x-avatar :user="$user" />
+                <div class="min-w-0">
+                    <p class="truncate text-sm font-semibold text-slate-950">{{ $user->name }}</p>
+                    <p class="truncate text-xs text-slate-500">{{ $user->email }}</p>
+                    <p class="mt-1 text-xs font-medium text-indigo-700">{{ ucfirst($user->role) }}</p>
+                </div>
             </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-stone-500 hover:text-stone-700 hover:bg-stone-100 focus:outline-none focus:bg-stone-100 focus:text-stone-700 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+            <form method="POST" action="{{ route('logout') }}" class="mt-3">
+                @csrf
+                <button type="submit" class="app-button-secondary w-full">Log Out</button>
+            </form>
         </div>
     </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard*')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')">
-                {{ __('Tickets') }}
-            </x-responsive-nav-link>
-            @if (Auth::user()->isRequester())
-                <x-responsive-nav-link :href="route('tickets.create')" :active="request()->routeIs('tickets.create')">
-                    {{ __('Create Ticket') }}
-                </x-responsive-nav-link>
-            @endif
-            @if (Auth::user()->isAdmin() || Auth::user()->isTechnician())
-                <x-responsive-nav-link :href="route('assets.index')" :active="request()->routeIs('assets.*')">
-                    {{ __('Assets') }}
-                </x-responsive-nav-link>
-            @endif
-            @if (Auth::user()->isAdmin())
-                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                    {{ __('Users') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.ticket-categories.index')" :active="request()->routeIs('admin.ticket-categories.*')">
-                    {{ __('Ticket Categories') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.asset-categories.index')" :active="request()->routeIs('admin.asset-categories.*')">
-                    {{ __('Asset Categories') }}
-                </x-responsive-nav-link>
-            @endif
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-stone-900">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-stone-500">{{ Auth::user()->email }}</div>
-                <div class="mt-1 text-xs font-medium uppercase text-teal-700">{{ Auth::user()->role }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
-    </div>
-</nav>
+</aside>

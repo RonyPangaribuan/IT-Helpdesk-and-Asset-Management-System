@@ -11,14 +11,14 @@
         <title>Session Expired - {{ config('app.name', 'DelDesk') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-stone-50 font-sans text-stone-900 antialiased">
+    <body class="bg-slate-50 font-sans text-slate-900 antialiased">
         <main class="flex min-h-screen items-center justify-center px-4 py-12">
-            <section class="w-full max-w-lg rounded-lg border border-stone-200 bg-white p-8 text-center shadow-sm">
-                <p class="text-sm font-semibold uppercase text-teal-700">DelDesk</p>
-                <h1 class="mt-3 text-4xl font-semibold text-stone-950">419</h1>
-                <p class="mt-3 text-lg font-medium text-stone-900">Session expired</p>
-                <p class="mt-2 text-sm leading-6 text-stone-600">Please refresh the form and submit it again.</p>
-                <a href="{{ $homeUrl }}" class="mt-6 inline-flex items-center rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">
+            <section class="w-full max-w-lg rounded-lg border border-slate-200 bg-white p-8 text-center shadow-sm">
+                <p class="text-sm font-semibold text-indigo-700">DelDesk</p>
+                <h1 class="mt-3 text-4xl font-semibold text-slate-950">419</h1>
+                <p class="mt-3 text-lg font-medium text-slate-900">Session expired</p>
+                <p class="mt-2 text-sm leading-6 text-slate-600">Please refresh the form and submit it again.</p>
+                <a href="{{ $homeUrl }}" class="app-button-primary mt-6">
                     {{ $homeLabel }}
                 </a>
             </section>

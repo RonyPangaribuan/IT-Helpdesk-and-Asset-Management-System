@@ -1,19 +1,44 @@
-<section class="rounded-lg border border-stone-200 bg-white p-6 shadow-sm">
-    <h2 class="text-base font-semibold text-stone-950">Report Detail</h2>
-    <div class="mt-5 space-y-5 text-sm">
+<x-section-card title="Main Report" description="Original issue details and current resolution context.">
+    <div class="space-y-6 text-sm">
         <div>
-            <p class="font-medium text-stone-500">Description</p>
-            <p class="mt-1 whitespace-pre-line leading-6 text-stone-800">{{ $ticket->description }}</p>
+            <p class="font-medium text-slate-500">Description</p>
+            <p class="mt-2 whitespace-pre-line break-words leading-7 text-slate-800">{{ $ticket->description }}</p>
         </div>
-        <div>
-            <p class="font-medium text-stone-500">Location</p>
-            <p class="mt-1 text-stone-800">{{ $ticket->location }}</p>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <p class="font-medium text-slate-500">Location</p>
+                <p class="mt-1 text-slate-900">{{ $ticket->location }}</p>
+            </div>
+            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <p class="font-medium text-slate-500">Category</p>
+                <p class="mt-1 text-slate-900">
+                    {{ $ticket->category->name }}
+                    @if ($ticket->category->trashed())
+                        <span class="text-xs text-slate-500">(archived)</span>
+                    @endif
+                </p>
+            </div>
+            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <p class="font-medium text-slate-500">Requester</p>
+                <p class="mt-1 text-slate-900">{{ $ticket->requester->name }}</p>
+            </div>
+            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <p class="font-medium text-slate-500">Technician</p>
+                <p class="mt-1 text-slate-900">{{ $ticket->technician?->name ?? 'Unassigned' }}</p>
+            </div>
         </div>
+
         @if ($ticket->resolution_note)
-            <div>
-                <p class="font-medium text-stone-500">Resolution Note</p>
-                <p class="mt-1 whitespace-pre-line leading-6 text-stone-800">{{ $ticket->resolution_note }}</p>
+            <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <p class="font-semibold text-emerald-900">Resolution</p>
+                    @if ($ticket->resolved_at)
+                        <p class="text-xs text-emerald-700">{{ $ticket->resolved_at->format('d M Y H:i') }}</p>
+                    @endif
+                </div>
+                <p class="mt-2 whitespace-pre-line break-words leading-7 text-emerald-900">{{ $ticket->resolution_note }}</p>
             </div>
         @endif
     </div>
-</section>
+</x-section-card>

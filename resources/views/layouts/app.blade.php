@@ -14,23 +14,42 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-gray-900">
-        <div class="min-h-screen bg-stone-50">
+    <body class="overflow-x-hidden font-sans antialiased text-slate-900">
+        <div x-data="{ sidebarOpen: false }" class="min-h-screen bg-slate-50">
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white border-b border-stone-200">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+            <div class="lg:pl-72">
+                <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+                    <div class="px-4 py-4 sm:px-6 lg:px-8">
+                        <div class="flex items-start gap-3">
+                            <button
+                                type="button"
+                                class="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 lg:hidden"
+                                x-on:click="sidebarOpen = true"
+                                x-bind:aria-expanded="sidebarOpen.toString()"
+                                aria-controls="mobile-sidebar"
+                                aria-label="Open navigation menu"
+                            >
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                                </svg>
+                            </button>
+
+                            <div class="min-w-0 flex-1">
+                                @isset($header)
+                                    {{ $header }}
+                                @else
+                                    <x-page-header title="DelDesk" description="IT support workspace" />
+                                @endisset
+                            </div>
+                        </div>
                     </div>
                 </header>
-            @endisset
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <main class="px-4 py-6 sm:px-6 lg:px-8">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
     </body>
 </html>

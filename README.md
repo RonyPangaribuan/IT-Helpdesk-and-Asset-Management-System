@@ -5,7 +5,7 @@
 
 DelDesk is a Laravel monolith MVP for IT helpdesk ticketing and basic asset management. It is built as a portfolio project for demonstrating Laravel fundamentals: authentication, authorization, Eloquent relationships, Form Requests, policies, middleware, services, migrations, seeders, factories, Blade, Tailwind CSS, and automated tests.
 
-Project status: **MVP v1.0.0 — Release Candidate**
+Project status: **MVP v1.0.0 - Release Candidate**
 
 ## Problem Statement
 
@@ -29,6 +29,19 @@ IT support reports are often scattered across chat, verbal requests, and spreads
 - Role-based dashboard statistics.
 - Demo seed data for local demonstration.
 - GitHub Actions CI.
+
+## UI Overview
+
+DelDesk uses a clean SaaS dashboard style for the Blade MVP. The authenticated app has a role-aware sidebar, a compact sticky header, reusable page headers, neutral white content surfaces, subtle borders, and consistent status badges.
+
+The UI direction is intentionally restrained:
+
+- Slate/white surfaces for the main workspace.
+- Indigo as the primary navigation and action color.
+- Blue, amber, emerald, red, violet, and slate only for status, priority, condition, and feedback.
+- Desktop tables with mobile card alternatives for ticket, asset, and user lists.
+- Ticket detail pages with workflow progress, next-action context, report detail, resolution, discussion, attachments, timeline, and metadata.
+- Form sections that separate identity, classification, asset context, files, access, and security.
 
 ## Role And Permission Matrix
 
@@ -250,7 +263,7 @@ DelDesk does not create public attachment URLs and does not require `storage:lin
 
 ## Screenshots
 
-Screenshots: To be captured.
+Screenshots: To be captured from the running redesigned UI.
 
 Checklist: [Screenshot Checklist](docs/SCREENSHOT_CHECKLIST.md)
 

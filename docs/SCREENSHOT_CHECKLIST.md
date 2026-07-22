@@ -9,18 +9,32 @@ Store completed screenshots in `docs/screenshots/` and update the README only fo
 - [ ] Landing page.
 - [ ] Login page.
 - [ ] Requester dashboard.
-- [ ] Create ticket.
-- [ ] Ticket detail with comments and attachments.
+- [ ] Ticket list desktop.
+- [ ] Ticket list mobile.
+- [ ] Ticket detail with workflow, comments, and attachments.
 - [ ] Technician dashboard.
+- [ ] Admin dashboard.
+- [ ] Asset list.
+- [ ] User management.
+
+## Additional Release Screenshots
+
+- [ ] Create ticket.
 - [ ] Technician In Progress ticket.
 - [ ] Resolve ticket form.
-- [ ] Admin dashboard.
 - [ ] Assignment workflow.
-- [ ] Asset list.
 - [ ] Asset detail.
-- [ ] User management.
 - [ ] Mobile navigation.
 - [ ] GitHub Actions CI success.
+
+## Responsive Viewports
+
+- [ ] 375px.
+- [ ] 430px.
+- [ ] 768px.
+- [ ] 1024px.
+- [ ] 1280px.
+- [ ] 1440px.
 
 ## Capture Notes
 
