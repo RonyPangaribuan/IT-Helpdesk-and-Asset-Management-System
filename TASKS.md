@@ -217,3 +217,22 @@
 - [ ] Create tag `v1.0.0`.
 - [ ] Create GitHub Release.
 - [ ] Jalankan final verification penuh sebelum merge.
+
+## UI/UX Polish
+
+- [x] Design system.
+- [x] App shell.
+- [x] Sidebar.
+- [x] Mobile navigation.
+- [x] Dashboard redesign.
+- [x] Ticket list.
+- [x] Ticket detail.
+- [x] Forms.
+- [x] Assets.
+- [x] Users.
+- [x] Categories.
+- [x] Auth pages.
+- [x] Landing page.
+- [ ] Responsive audit.
+- [ ] Accessibility audit.
+- [x] Build and tests.

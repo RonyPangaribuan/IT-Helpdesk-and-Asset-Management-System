@@ -1,36 +1,35 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <p class="text-sm font-medium uppercase text-teal-700">Admin</p>
-            <h1 class="text-2xl font-semibold text-stone-950">Edit Asset Category</h1>
-        </div>
+        <x-page-header
+            eyebrow="Admin"
+            title="Edit Asset Category"
+            description="Update category text used by existing inventory records."
+        />
     </x-slot>
 
-    <div class="py-8">
-        <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-            <div class="rounded-lg border border-stone-200 bg-white p-6 shadow-sm">
-                <form method="POST" action="{{ route('admin.asset-categories.update', $category) }}" class="space-y-5">
-                    @csrf
-                    @method('PATCH')
+    <div class="mx-auto max-w-3xl">
+        <x-section-card title="Category details">
+            <form method="POST" action="{{ route('admin.asset-categories.update', $category) }}" class="space-y-5">
+                @csrf
+                @method('PATCH')
 
-                    <div>
-                        <x-input-label for="name" value="Name" />
-                        <x-text-input id="name" name="name" class="mt-1 block w-full" value="{{ old('name', $category->name) }}" required maxlength="100" />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
+                <div>
+                    <x-input-label for="name" value="Name" />
+                    <x-text-input id="name" name="name" class="mt-1" value="{{ old('name', $category->name) }}" required maxlength="100" />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                </div>
 
-                    <div>
-                        <x-input-label for="description" value="Description" />
-                        <textarea id="description" name="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description', $category->description) }}</textarea>
-                        <x-input-error :messages="$errors->get('description')" class="mt-2" />
-                    </div>
+                <div>
+                    <x-input-label for="description" value="Description" />
+                    <textarea id="description" name="description" rows="4" class="app-input mt-1">{{ old('description', $category->description) }}</textarea>
+                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                </div>
 
-                    <div class="flex items-center justify-end gap-3">
-                        <a href="{{ route('admin.asset-categories.index') }}" class="text-sm font-medium text-stone-600 hover:text-stone-950">Cancel</a>
-                        <x-primary-button>Save Changes</x-primary-button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                <div class="flex items-center justify-end gap-3 border-t border-slate-100 pt-5">
+                    <a href="{{ route('admin.asset-categories.index') }}" class="app-button-secondary">Cancel</a>
+                    <x-primary-button>Save Changes</x-primary-button>
+                </div>
+            </form>
+        </x-section-card>
     </div>
 </x-app-layout>

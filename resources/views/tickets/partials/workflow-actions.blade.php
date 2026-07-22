@@ -7,24 +7,37 @@
     $canResolve = $user?->can('resolve', $ticket) ?? false;
     $canClose = $user?->can('close', $ticket) ?? false;
     $canReopen = $user?->can('reopen', $ticket) ?? false;
+    $hasAction = $canAssign || $canReassign || $canStartWork || $canCancel || $canResolve || $canClose || $canReopen;
 @endphp
 
-@if ($canAssign || $canReassign || $canStartWork || $canCancel || $canResolve || $canClose || $canReopen)
-    <section class="rounded-lg border border-stone-200 bg-white p-6 shadow-sm">
-        <h2 class="text-base font-semibold text-stone-950">Workflow Actions</h2>
-
-        <div class="mt-5 space-y-6">
+<x-section-card
+    title="{{ $canClose || $canReopen ? 'Resolution Ready' : 'Next Action' }}"
+    description="Actions are shown only when your role and the current ticket status allow them."
+>
+    @if (! $hasAction)
+        <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
+            @if ($ticket->status === App\Enums\TicketStatus::Closed)
+                This ticket has been completed and is now read-only.
+            @elseif ($ticket->status === App\Enums\TicketStatus::Cancelled)
+                This ticket was cancelled and can no longer be processed.
+            @else
+                No workflow action is available for your role at this status.
+            @endif
+        </div>
+    @else
+        <div class="space-y-6">
             @can('assign', $ticket)
                 <form method="POST" action="{{ route('tickets.assign', $ticket) }}" class="space-y-3">
                     @csrf
                     <div>
                         <x-input-label for="technician_id_assign" value="Assign Technician" />
-                        <select id="technician_id_assign" name="technician_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                        <select id="technician_id_assign" name="technician_id" class="app-input mt-1" required>
                             <option value="">Select active technician</option>
                             @foreach ($technicians as $technician)
                                 <option value="{{ $technician->id }}" @selected((int) old('technician_id') === $technician->id)>{{ $technician->name }}</option>
                             @endforeach
                         </select>
+                        <p class="app-help">Open tickets become Assigned after an administrator chooses an active technician.</p>
                         <x-input-error :messages="$errors->get('technician_id')" class="mt-2" />
                     </div>
                     <x-primary-button>Assign Ticket</x-primary-button>
@@ -37,7 +50,7 @@
                     @method('PATCH')
                     <div>
                         <x-input-label for="technician_id_reassign" value="Reassign Technician" />
-                        <select id="technician_id_reassign" name="technician_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                        <select id="technician_id_reassign" name="technician_id" class="app-input mt-1" required>
                             <option value="">Select different active technician</option>
                             @foreach ($technicians as $technician)
                                 @if ($technician->id !== $ticket->technician_id)
@@ -52,6 +65,9 @@
             @endcan
 
             @can('startWork', $ticket)
+                <div class="rounded-lg border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-900">
+                    This ticket is assigned to you and ready to be worked on.
+                </div>
                 <form method="POST" action="{{ route('tickets.start-work', $ticket) }}">
                     @csrf
                     @method('PATCH')
@@ -65,7 +81,8 @@
                     @method('PATCH')
                     <div>
                         <x-input-label for="resolution_note" value="Resolution Note" />
-                        <textarea id="resolution_note" name="resolution_note" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>{{ old('resolution_note') }}</textarea>
+                        <textarea id="resolution_note" name="resolution_note" rows="5" class="app-input mt-1" required>{{ old('resolution_note') }}</textarea>
+                        <p class="app-help">Explain what was fixed, replaced, configured, or verified.</p>
                         <x-input-error :messages="$errors->get('resolution_note')" class="mt-2" />
                     </div>
                     <x-primary-button>Resolve Ticket</x-primary-button>
@@ -73,6 +90,9 @@
             @endcan
 
             @can('close', $ticket)
+                <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">
+                    Review the technician's resolution. Close the ticket if the issue is solved, or reopen it if the issue persists.
+                </div>
                 <form method="POST" action="{{ route('tickets.close', $ticket) }}" onsubmit="return confirm('Close this resolved ticket?');">
                     @csrf
                     @method('PATCH')
@@ -86,10 +106,10 @@
                     @method('PATCH')
                     <div>
                         <x-input-label for="reopen_reason" value="Reopen Reason" />
-                        <textarea id="reopen_reason" name="reason" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>{{ old('reason') }}</textarea>
+                        <textarea id="reopen_reason" name="reason" rows="4" class="app-input mt-1" required>{{ old('reason') }}</textarea>
                         <x-input-error :messages="$errors->get('reason')" class="mt-2" />
                     </div>
-                    <x-primary-button>Reopen Ticket</x-primary-button>
+                    <button type="submit" class="app-button-warning">Reopen Ticket</button>
                 </form>
             @endcan
 
@@ -99,12 +119,12 @@
                     @method('PATCH')
                     <div>
                         <x-input-label for="cancel_reason" value="Cancellation Reason" />
-                        <textarea id="cancel_reason" name="reason" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>{{ old('reason') }}</textarea>
+                        <textarea id="cancel_reason" name="reason" rows="4" class="app-input mt-1" required>{{ old('reason') }}</textarea>
                         <x-input-error :messages="$errors->get('reason')" class="mt-2" />
                     </div>
-                    <button type="submit" class="inline-flex items-center rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-800">Cancel Ticket</button>
+                    <button type="submit" class="app-button-danger">Cancel Ticket</button>
                 </form>
             @endcan
         </div>
-    </section>
-@endif
+    @endif
+</x-section-card>

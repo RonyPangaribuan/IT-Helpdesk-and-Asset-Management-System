@@ -11,30 +11,29 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-stone-50 text-stone-900 antialiased">
+    <body class="bg-slate-50 text-slate-900 antialiased">
         <main class="min-h-screen">
             <section class="bg-white">
-                <div class="mx-auto flex min-h-[92vh] max-w-7xl flex-col px-6 py-6 lg:px-8">
-                    <nav class="flex flex-wrap items-center justify-between gap-4">
-                        <a href="{{ route('home') }}" class="inline-flex items-center gap-3 text-teal-700">
+                <div class="mx-auto flex min-h-[86vh] max-w-7xl flex-col px-6 py-6 lg:px-8">
+                    <nav class="flex flex-wrap items-center justify-between gap-4" aria-label="Public navigation">
+                        <a href="{{ route('home') }}" class="inline-flex items-center gap-3 text-indigo-700">
                             <x-application-logo class="h-10 w-auto" />
-                            <span class="text-lg font-semibold text-stone-950">DelDesk</span>
                         </a>
 
                         @if (Route::has('login'))
                             <div class="flex flex-wrap items-center gap-3 text-sm font-medium">
                                 @auth
-                                    <a href="{{ route('dashboard') }}" class="rounded-md border border-stone-300 bg-white px-4 py-2 text-stone-800 shadow-sm hover:border-teal-300 hover:text-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">
+                                    <a href="{{ route('dashboard') }}" class="app-button-secondary">
                                         Dashboard
                                     </a>
                                 @else
-                                    <a href="{{ route('login') }}" class="rounded-md border border-stone-300 bg-white px-4 py-2 text-stone-800 shadow-sm hover:border-teal-300 hover:text-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">
+                                    <a href="{{ route('login') }}" class="app-button-secondary">
                                         Log In
                                     </a>
 
                                     @if (Route::has('register'))
-                                        <a href="{{ route('register') }}" class="rounded-md bg-teal-700 px-4 py-2 text-white shadow-sm hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">
-                                            Register
+                                        <a href="{{ route('register') }}" class="app-button-primary">
+                                            Create Requester Account
                                         </a>
                                     @endif
                                 @endauth
@@ -42,79 +41,101 @@
                         @endif
                     </nav>
 
-                    <div class="flex flex-1 items-center py-14">
-                        <div class="max-w-4xl">
-                            <p class="text-sm font-semibold uppercase text-teal-700">IT Helpdesk and Asset Management</p>
-                            <h1 class="mt-4 text-5xl font-semibold leading-tight text-stone-950 sm:text-6xl">
-                                DelDesk
+                    <div class="grid flex-1 items-center gap-12 py-12 lg:grid-cols-[1fr_0.9fr]">
+                        <div class="max-w-3xl">
+                            <p class="text-sm font-semibold text-indigo-700">IT Helpdesk and Asset Management</p>
+                            <h1 class="mt-4 text-4xl font-semibold leading-tight tracking-tight text-slate-950 sm:text-6xl">
+                                IT support, organized from report to resolution.
                             </h1>
-                            <p class="mt-6 max-w-3xl text-lg leading-8 text-stone-600">
-                                A Laravel MVP for reporting IT issues, assigning technicians, tracking status history, keeping ticket discussions in one place, and connecting incidents to managed assets.
+                            <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+                                DelDesk centralizes support requests, technician workflows, collaboration, and asset history in one clear Laravel system.
                             </p>
                             <div class="mt-8 flex flex-wrap gap-3">
-                                <a href="{{ route('login') }}" class="rounded-md bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">
+                                <a href="{{ route('login') }}" class="app-button-primary px-5 py-3">
                                     Open DelDesk
                                 </a>
                                 @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="rounded-md border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-800 shadow-sm hover:border-teal-300 hover:text-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">
+                                    <a href="{{ route('register') }}" class="app-button-secondary px-5 py-3">
                                         Create Requester Account
                                     </a>
                                 @endif
                             </div>
                         </div>
+
+                        <div class="app-card p-5 sm:p-6" aria-label="DelDesk workflow preview">
+                            <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-950">Ticket workflow</p>
+                                    <p class="mt-1 text-xs text-slate-500">Visible progress for every role</p>
+                                </div>
+                                <span class="app-badge bg-indigo-50 text-indigo-700 ring-indigo-200"><span class="h-1.5 w-1.5 rounded-full bg-indigo-500" aria-hidden="true"></span>Live queue</span>
+                            </div>
+
+                            <ol class="mt-5 space-y-3">
+                                @foreach ([
+                                    ['label' => 'Report', 'text' => 'Requester submits issue details.'],
+                                    ['label' => 'Assign', 'text' => 'Admin chooses an active technician.'],
+                                    ['label' => 'Work', 'text' => 'Technician starts work and collaborates.'],
+                                    ['label' => 'Resolve', 'text' => 'Resolution note records the fix.'],
+                                    ['label' => 'Confirm', 'text' => 'Requester closes or reopens.'],
+                                ] as $step)
+                                    <li class="flex gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                                        <span class="mt-1 h-2.5 w-2.5 rounded-full bg-indigo-600" aria-hidden="true"></span>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-950">{{ $step['label'] }}</p>
+                                            <p class="mt-1 text-sm leading-5 text-slate-600">{{ $step['text'] }}</p>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ol>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section class="border-y border-stone-200 bg-stone-50">
-                <div class="mx-auto grid max-w-7xl gap-6 px-6 py-10 md:grid-cols-4 lg:px-8">
+            <section class="border-y border-slate-200 bg-slate-50">
+                <div class="mx-auto grid max-w-7xl gap-6 px-6 py-12 md:grid-cols-3 lg:px-8">
                     @foreach ([
-                        ['label' => 'Report', 'text' => 'Requesters submit issues with category, priority, location, asset, and attachments.'],
-                        ['label' => 'Assign', 'text' => 'Administrators review open tickets and assign active technicians.'],
-                        ['label' => 'Resolve', 'text' => 'Technicians start work, discuss progress, and record resolution notes.'],
-                        ['label' => 'Close', 'text' => 'Requesters confirm resolution or reopen the ticket with a reason.'],
-                    ] as $step)
-                        <article class="rounded-lg border border-stone-200 bg-white p-5 shadow-sm">
-                            <h2 class="text-base font-semibold text-stone-950">{{ $step['label'] }}</h2>
-                            <p class="mt-2 text-sm leading-6 text-stone-600">{{ $step['text'] }}</p>
+                        ['title' => 'Centralized reports', 'text' => 'Requests no longer disappear into chat threads or spreadsheets.'],
+                        ['title' => 'Role-aware workflow', 'text' => 'Requester, technician, and administrator screens focus on their next action.'],
+                        ['title' => 'Asset context', 'text' => 'Tickets can connect issues with the device history technicians need.'],
+                    ] as $feature)
+                        <article class="app-card p-5">
+                            <h2 class="text-base font-semibold text-slate-950">{{ $feature['title'] }}</h2>
+                            <p class="mt-2 text-sm leading-6 text-slate-600">{{ $feature['text'] }}</p>
                         </article>
                     @endforeach
                 </div>
             </section>
 
             <section class="bg-white">
-                <div class="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-2 lg:px-8">
+                <div class="mx-auto grid max-w-7xl gap-8 px-6 py-14 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
                     <div>
-                        <h2 class="text-2xl font-semibold text-stone-950">Core MVP Features</h2>
-                        <ul class="mt-5 grid gap-3 text-sm leading-6 text-stone-700 sm:grid-cols-2">
-                            <li>Role-based dashboards</li>
-                            <li>Ticket CRUD and archive</li>
-                            <li>Status workflow history</li>
-                            <li>Comments and private attachments</li>
-                            <li>Asset inventory and ticket links</li>
-                            <li>Admin category and user management</li>
-                        </ul>
+                        <p class="text-sm font-semibold text-indigo-700">Role overview</p>
+                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Clear workspaces for each user type.</h2>
                     </div>
 
-                    <div>
-                        <h2 class="text-2xl font-semibold text-stone-950">Roles</h2>
-                        <div class="mt-5 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-                            <article class="rounded-lg border border-stone-200 bg-stone-50 p-4">
-                                <h3 class="text-sm font-semibold text-stone-950">Administrator</h3>
-                                <p class="mt-1 text-sm leading-6 text-stone-600">Manages users, categories, assets, assignments, and operational dashboards.</p>
+                    <div class="grid gap-4 md:grid-cols-3">
+                        @foreach ([
+                            ['title' => 'Requester', 'text' => 'Create tickets, track progress, comment, upload evidence, and confirm resolution.'],
+                            ['title' => 'Technician', 'text' => 'View assigned tickets, start work, collaborate, upload files, and resolve issues.'],
+                            ['title' => 'Administrator', 'text' => 'Manage users, assign tickets, organize categories, maintain assets, and review operations.'],
+                        ] as $role)
+                            <article class="rounded-lg border border-slate-200 bg-slate-50 p-5">
+                                <h3 class="text-sm font-semibold text-slate-950">{{ $role['title'] }}</h3>
+                                <p class="mt-2 text-sm leading-6 text-slate-600">{{ $role['text'] }}</p>
                             </article>
-                            <article class="rounded-lg border border-stone-200 bg-stone-50 p-4">
-                                <h3 class="text-sm font-semibold text-stone-950">Technician</h3>
-                                <p class="mt-1 text-sm leading-6 text-stone-600">Works assigned tickets, adds notes, uploads evidence, and resolves issues.</p>
-                            </article>
-                            <article class="rounded-lg border border-stone-200 bg-stone-50 p-4">
-                                <h3 class="text-sm font-semibold text-stone-950">Requester</h3>
-                                <p class="mt-1 text-sm leading-6 text-stone-600">Creates support tickets, tracks progress, comments, and confirms resolution.</p>
-                            </article>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </section>
+
+            <footer class="border-t border-slate-200 bg-white">
+                <div class="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+                    <p>DelDesk MVP / Laravel monolith / Blade and Tailwind CSS</p>
+                    <a href="{{ route('login') }}" class="app-link">Open DelDesk</a>
+                </div>
+            </footer>
         </main>
     </body>
 </html>
