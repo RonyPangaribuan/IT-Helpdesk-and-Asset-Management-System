@@ -1,6 +1,6 @@
 # Product Requirements Document (PRD)
 
-## DelDesk — IT Helpdesk & Asset Management System
+## deskIT — IT Helpdesk & Asset Management System
 
 **Document version:** 1.0  
 **Project type:** Web application  
@@ -12,7 +12,7 @@
 
 # 1. Product Overview
 
-DelDesk is a web-based IT helpdesk application for reporting, assigning, tracking, and resolving IT-related issues inside a campus, organization, or small company.
+deskIT is a web-based IT helpdesk application for reporting, assigning, tracking, and resolving IT-related issues inside a campus, organization, or small company.
 
 The system allows users to submit support tickets, administrators to review and assign tickets, and technicians to record the handling and resolution process.
 
@@ -31,7 +31,7 @@ IT problem reporting is often handled through chat, verbal communication, or uns
 - Administrators cannot measure ticket volume or resolution performance.
 - Asset damage records are not stored consistently.
 
-DelDesk provides one centralized system for recording and monitoring IT support activities.
+deskIT provides one centralized system for recording and monitoring IT support activities.
 
 ---
 
@@ -1250,4 +1250,4 @@ After the MVP is stable:
 
 # 27. Final Product Statement
 
-DelDesk MVP is complete when a requester can report an IT problem, an administrator can assign it, a technician can process and resolve it, and the requester can close or reopen the report, with authorization, comments, attachments, status history, dashboard data, and basic asset records working correctly in a deployed Laravel application.
+deskIT MVP is complete when a requester can report an IT problem, an administrator can assign it, a technician can process and resolve it, and the requester can close or reopen the report, with authorization, comments, attachments, status history, dashboard data, and basic asset records working correctly in a deployed Laravel application.

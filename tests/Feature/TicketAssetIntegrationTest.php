@@ -219,7 +219,7 @@ class TicketAssetIntegrationTest extends TestCase
 
     public function test_ticket_creation_with_attachment_and_asset_is_atomic(): void
     {
-        $disk = (string) config('deldesk.attachment_disk');
+        $disk = (string) config('deskit.attachment_disk');
         Storage::fake($disk);
 
         $requester = User::factory()->requester()->create();

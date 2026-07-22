@@ -16,6 +16,7 @@ Current status: Release candidate preparation.
 - [x] License added.
 - [x] Demo credentials documented for local/demo use.
 - [x] Production credentials documented as separate from demo credentials.
+- [x] deskIT branding assets prepared.
 - [x] No production secret committed.
 
 ## Verification
@@ -42,7 +43,7 @@ Current status: Release candidate preparation.
 
 ## Portfolio Assets
 
-- [ ] Screenshots captured.
+- [ ] Screenshots captured after deskIT rebranding.
 - [ ] Demo video recorded.
 - [ ] Live deployment URL verified.
 

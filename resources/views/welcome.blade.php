@@ -4,7 +4,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'DelDesk') }}</title>
+        <title>{{ config('app.name', 'deskIT') }}</title>
+        <meta name="description" content="deskIT centralizes support requests, technician workflows, collaboration, and asset history for IT teams.">
+        <meta name="application-name" content="{{ config('app.name', 'deskIT') }}">
+        <meta name="theme-color" content="#4338ca">
+
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('branding/deskit-mark-192.png') }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
@@ -41,18 +48,18 @@
                         @endif
                     </nav>
 
-                    <div class="grid flex-1 items-center gap-12 py-12 lg:grid-cols-[1fr_0.9fr]">
+                    <div class="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[0.95fr_0.75fr]">
                         <div class="max-w-3xl">
-                            <p class="text-sm font-semibold text-indigo-700">IT Helpdesk and Asset Management</p>
+                            <p class="text-sm font-semibold text-indigo-700">IT Helpdesk & Asset Management</p>
                             <h1 class="mt-4 text-4xl font-semibold leading-tight tracking-tight text-slate-950 sm:text-6xl">
                                 IT support, organized from report to resolution.
                             </h1>
                             <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-                                DelDesk centralizes support requests, technician workflows, collaboration, and asset history in one clear Laravel system.
+                                deskIT centralizes support requests, technician workflows, collaboration, and asset history in one clear Laravel system.
                             </p>
                             <div class="mt-8 flex flex-wrap gap-3">
                                 <a href="{{ route('login') }}" class="app-button-primary px-5 py-3">
-                                    Open DelDesk
+                                    Open deskIT
                                 </a>
                                 @if (Route::has('register'))
                                     <a href="{{ route('register') }}" class="app-button-secondary px-5 py-3">
@@ -62,33 +69,15 @@
                             </div>
                         </div>
 
-                        <div class="app-card p-5 sm:p-6" aria-label="DelDesk workflow preview">
-                            <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-4">
-                                <div>
-                                    <p class="text-sm font-semibold text-slate-950">Ticket workflow</p>
-                                    <p class="mt-1 text-xs text-slate-500">Visible progress for every role</p>
-                                </div>
-                                <span class="app-badge bg-indigo-50 text-indigo-700 ring-indigo-200"><span class="h-1.5 w-1.5 rounded-full bg-indigo-500" aria-hidden="true"></span>Live queue</span>
-                            </div>
-
-                            <ol class="mt-5 space-y-3">
-                                @foreach ([
-                                    ['label' => 'Report', 'text' => 'Requester submits issue details.'],
-                                    ['label' => 'Assign', 'text' => 'Admin chooses an active technician.'],
-                                    ['label' => 'Work', 'text' => 'Technician starts work and collaborates.'],
-                                    ['label' => 'Resolve', 'text' => 'Resolution note records the fix.'],
-                                    ['label' => 'Confirm', 'text' => 'Requester closes or reopens.'],
-                                ] as $step)
-                                    <li class="flex gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-                                        <span class="mt-1 h-2.5 w-2.5 rounded-full bg-indigo-600" aria-hidden="true"></span>
-                                        <div>
-                                            <p class="text-sm font-semibold text-slate-950">{{ $step['label'] }}</p>
-                                            <p class="mt-1 text-sm leading-5 text-slate-600">{{ $step['text'] }}</p>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ol>
-                        </div>
+                        <figure class="mx-auto w-full max-w-sm lg:max-w-md">
+                            <img
+                                src="{{ asset('branding/deskit-logo-full.png') }}"
+                                alt="deskIT support workflow illustration with ticket, headset, devices, and check mark"
+                                width="770"
+                                height="892"
+                                class="max-h-[420px] w-full object-contain"
+                            >
+                        </figure>
                     </div>
                 </div>
             </section>
@@ -132,8 +121,8 @@
 
             <footer class="border-t border-slate-200 bg-white">
                 <div class="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-                    <p>DelDesk MVP / Laravel monolith / Blade and Tailwind CSS</p>
-                    <a href="{{ route('login') }}" class="app-link">Open DelDesk</a>
+                    <p>deskIT MVP / Laravel monolith / Blade and Tailwind CSS</p>
+                    <a href="{{ route('login') }}" class="app-link">Open deskIT</a>
                 </div>
             </footer>
         </main>

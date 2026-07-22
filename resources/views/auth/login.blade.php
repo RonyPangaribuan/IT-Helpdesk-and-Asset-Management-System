@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="mb-6">
         <p class="text-sm font-medium text-indigo-700">Welcome back</p>
-        <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-950">Log in to DelDesk</h1>
+        <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-950">Log in to deskIT</h1>
         <p class="mt-2 text-sm leading-6 text-slate-600">Open your role-based helpdesk workspace.</p>
     </div>
 

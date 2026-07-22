@@ -5,7 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'DelDesk') }}</title>
+        <title>{{ config('app.name', 'deskIT') }}</title>
+
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('branding/deskit-mark-192.png') }}">
+        <meta name="application-name" content="{{ config('app.name', 'deskIT') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -39,7 +44,7 @@
                                 @isset($header)
                                     {{ $header }}
                                 @else
-                                    <x-page-header title="DelDesk" description="IT support workspace" />
+                                    <x-page-header title="deskIT" description="IT support workspace" />
                                 @endisset
                             </div>
                         </div>

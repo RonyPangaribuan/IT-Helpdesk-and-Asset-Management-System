@@ -8,13 +8,13 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Page Not Found - {{ config('app.name', 'DelDesk') }}</title>
+        <title>Page Not Found - {{ config('app.name', 'deskIT') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="bg-slate-50 font-sans text-slate-900 antialiased">
         <main class="flex min-h-screen items-center justify-center px-4 py-12">
             <section class="w-full max-w-lg rounded-lg border border-slate-200 bg-white p-8 text-center shadow-sm">
-                <p class="text-sm font-semibold text-indigo-700">DelDesk</p>
+                <p class="text-sm font-semibold text-indigo-700">deskIT</p>
                 <h1 class="mt-3 text-4xl font-semibold text-slate-950">404</h1>
                 <p class="mt-3 text-lg font-medium text-slate-900">Page not found</p>
                 <p class="mt-2 text-sm leading-6 text-slate-600">The page or file you requested is unavailable.</p>

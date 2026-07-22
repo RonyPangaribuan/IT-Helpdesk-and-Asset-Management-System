@@ -1,13 +1,13 @@
 # Screenshot Checklist
 
-Real screenshots must be captured from the running DelDesk application. Do not use placeholder images or screenshots from another project.
+Real screenshots must be captured from the running deskIT application after this rebrand. Do not reuse old screenshots, placeholder images, or screenshots from another project.
 
 Store completed screenshots in `docs/screenshots/` and update the README only for images that actually exist.
 
 ## Required Screenshots
 
-- [ ] Landing page.
-- [ ] Login page.
+- [ ] Landing page deskIT.
+- [ ] Login deskIT.
 - [ ] Requester dashboard.
 - [ ] Ticket list desktop.
 - [ ] Ticket list mobile.
@@ -16,6 +16,8 @@ Store completed screenshots in `docs/screenshots/` and update the README only fo
 - [ ] Admin dashboard.
 - [ ] Asset list.
 - [ ] User management.
+- [ ] Mobile navigation.
+- [ ] GitHub Actions CI success.
 
 ## Additional Release Screenshots
 
@@ -24,8 +26,6 @@ Store completed screenshots in `docs/screenshots/` and update the README only fo
 - [ ] Resolve ticket form.
 - [ ] Assignment workflow.
 - [ ] Asset detail.
-- [ ] Mobile navigation.
-- [ ] GitHub Actions CI success.
 
 ## Responsive Viewports
 

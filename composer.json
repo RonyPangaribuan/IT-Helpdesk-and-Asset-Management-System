@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "deldesk/helpdesk-asset-management",
+    "name": "deskit/helpdesk-asset-management",
     "type": "project",
-    "description": "DelDesk IT helpdesk and asset management MVP.",
+    "description": "deskIT IT helpdesk and asset management MVP.",
     "keywords": ["laravel", "helpdesk", "asset-management"],
     "license": "MIT",
     "require": {
