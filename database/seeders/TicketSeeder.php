@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\TicketPriority;
 use App\Enums\TicketStatus;
+use App\Models\Asset;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\User;
@@ -50,31 +51,40 @@ class TicketSeeder extends Seeder
         }
 
         $tickets = [
-            ['title' => 'Laptop cannot connect to campus Wi-Fi', 'priority' => TicketPriority::High, 'location' => 'Library Floor 2', 'target' => TicketStatus::Open],
-            ['title' => 'Printer output has faded text', 'priority' => TicketPriority::Medium, 'location' => 'Administration Office', 'target' => TicketStatus::Assigned],
-            ['title' => 'Projector HDMI signal not detected', 'priority' => TicketPriority::High, 'location' => 'Room A-204', 'target' => TicketStatus::InProgress],
-            ['title' => 'Password reset request for portal account', 'priority' => TicketPriority::Low, 'location' => 'Student Service Desk', 'target' => TicketStatus::Cancelled],
-            ['title' => 'Accounting software fails to launch', 'priority' => TicketPriority::Critical, 'location' => 'Finance Office', 'target' => TicketStatus::Resolved],
-            ['title' => 'Mouse and keyboard intermittently disconnect', 'priority' => TicketPriority::Medium, 'location' => 'Computer Lab 1', 'target' => TicketStatus::Closed],
-            ['title' => 'Cannot access shared network folder', 'priority' => TicketPriority::High, 'location' => 'HR Department', 'target' => TicketStatus::Reopened],
-            ['title' => 'Monitor shows flickering image', 'priority' => TicketPriority::Low, 'location' => 'Room B-112', 'target' => TicketStatus::Open],
-            ['title' => 'Email client keeps asking for password', 'priority' => TicketPriority::Medium, 'location' => 'Faculty Office', 'target' => TicketStatus::Assigned],
-            ['title' => 'New user workstation needs setup', 'priority' => TicketPriority::Low, 'location' => 'IT Office', 'target' => TicketStatus::Cancelled],
-            ['title' => 'Scanner driver is missing', 'priority' => TicketPriority::Medium, 'location' => 'Archive Room', 'target' => TicketStatus::Resolved],
-            ['title' => 'Classroom speaker has no sound', 'priority' => TicketPriority::High, 'location' => 'Room C-301', 'target' => TicketStatus::Closed],
+            ['title' => 'Laptop cannot connect to campus Wi-Fi', 'priority' => TicketPriority::High, 'location' => 'Library Floor 2', 'target' => TicketStatus::Open, 'asset_code' => 'AST-NET-002'],
+            ['title' => 'Printer output has faded text', 'priority' => TicketPriority::Medium, 'location' => 'Administration Office', 'target' => TicketStatus::Assigned, 'asset_code' => 'AST-PRN-001'],
+            ['title' => 'Projector HDMI signal not detected', 'priority' => TicketPriority::High, 'location' => 'Room A-204', 'target' => TicketStatus::InProgress, 'asset_code' => 'AST-PRJ-001'],
+            ['title' => 'Password reset request for portal account', 'priority' => TicketPriority::Low, 'location' => 'Student Service Desk', 'target' => TicketStatus::Cancelled, 'asset_code' => null],
+            ['title' => 'Accounting software fails to launch', 'priority' => TicketPriority::Critical, 'location' => 'Finance Office', 'target' => TicketStatus::Resolved, 'asset_code' => 'AST-DES-002'],
+            ['title' => 'Mouse and keyboard intermittently disconnect', 'priority' => TicketPriority::Medium, 'location' => 'Computer Lab 1', 'target' => TicketStatus::Closed, 'asset_code' => 'AST-PER-002'],
+            ['title' => 'Cannot access shared network folder', 'priority' => TicketPriority::High, 'location' => 'HR Department', 'target' => TicketStatus::Reopened, 'asset_code' => 'AST-NET-001'],
+            ['title' => 'Monitor shows flickering image', 'priority' => TicketPriority::Low, 'location' => 'Room B-112', 'target' => TicketStatus::Open, 'asset_code' => 'AST-PER-001'],
+            ['title' => 'Email client keeps asking for password', 'priority' => TicketPriority::Medium, 'location' => 'Faculty Office', 'target' => TicketStatus::Assigned, 'asset_code' => 'AST-LAP-002'],
+            ['title' => 'New user workstation needs setup', 'priority' => TicketPriority::Low, 'location' => 'IT Office', 'target' => TicketStatus::Cancelled, 'asset_code' => 'AST-DES-001'],
+            ['title' => 'Scanner driver is missing', 'priority' => TicketPriority::Medium, 'location' => 'Archive Room', 'target' => TicketStatus::Resolved, 'asset_code' => 'AST-PRN-002'],
+            ['title' => 'Classroom speaker has no sound', 'priority' => TicketPriority::High, 'location' => 'Room C-301', 'target' => TicketStatus::Closed, 'asset_code' => 'AST-PRJ-002'],
         ];
 
+        $assetsByCode = Asset::withTrashed()
+            ->whereIn('asset_code', collect($tickets)->pluck('asset_code')->filter()->all())
+            ->get()
+            ->keyBy('asset_code');
+
         foreach ($tickets as $index => $ticketData) {
+            $asset = is_string($ticketData['asset_code']) ? $assetsByCode->get($ticketData['asset_code']) : null;
             $ticket = Ticket::query()->where('title', $ticketData['title'])->first();
 
             if (! $ticket instanceof Ticket) {
                 $ticket = $workflow->createTicket($requesters[$index % $requesters->count()], [
                     'ticket_category_id' => $categories[$index % $categories->count()]->id,
+                    'asset_id' => $asset?->id,
                     'title' => $ticketData['title'],
                     'description' => 'Demo report for '.$ticketData['title'].'. This ticket demonstrates DelDesk ticket collaboration and workflow states.',
                     'location' => $ticketData['location'],
                     'priority' => $ticketData['priority'],
                 ]);
+            } elseif ($ticket->asset_id === null && $asset instanceof Asset) {
+                $ticket->forceFill(['asset_id' => $asset->id])->save();
             }
 
             if ($technicians->isEmpty()) {
@@ -117,6 +127,7 @@ class TicketSeeder extends Seeder
             }
 
             if ($ticketData['target'] === TicketStatus::Closed && $ticket->refresh()->status === TicketStatus::Resolved) {
+                $this->seedComments($ticket, $admin, $technicians);
                 $ticket = $workflow->close($ticket, $admin);
             }
 
@@ -125,10 +136,13 @@ class TicketSeeder extends Seeder
             }
 
             if ($ticketData['target'] === TicketStatus::Cancelled && in_array($ticket->refresh()->status, [TicketStatus::Open, TicketStatus::Assigned], true)) {
+                $this->seedComments($ticket, $admin, $technicians);
                 $ticket = $workflow->cancel($ticket, $admin, 'Demo cancellation for a duplicate or no longer needed request.');
             }
 
-            $this->seedComments($ticket->refresh(), $admin, $technicians);
+            if (! $ticket->refresh()->status->isTerminal()) {
+                $this->seedComments($ticket, $admin, $technicians);
+            }
         }
     }
 

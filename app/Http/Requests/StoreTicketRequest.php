@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\AssetCondition;
 use App\Enums\TicketPriority;
 use App\Models\Ticket;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -16,6 +17,13 @@ class StoreTicketRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user()?->can('create', Ticket::class) ?? false;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'asset_id' => $this->input('asset_id') === '' ? null : $this->input('asset_id'),
+        ]);
     }
 
     /**
@@ -34,6 +42,13 @@ class StoreTicketRequest extends FormRequest
             ],
             'priority' => ['required', Rule::in(TicketPriority::values())],
             'location' => ['required', 'string', 'max:150'],
+            'asset_id' => [
+                'nullable',
+                Rule::exists('assets', 'id')
+                    ->where('is_active', true)
+                    ->where('condition', '!=', AssetCondition::Retired->value)
+                    ->whereNull('deleted_at'),
+            ],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => [
                 'file',

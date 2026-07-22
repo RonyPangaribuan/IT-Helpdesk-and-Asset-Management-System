@@ -18,6 +18,32 @@
         <dd class="mt-1"><x-status-badge :status="$ticket->status" /></dd>
     </div>
     <div>
+        <dt class="font-medium text-stone-500">Related Asset</dt>
+        <dd class="mt-1 text-stone-800">
+            @if ($ticket->asset)
+                <div class="space-y-1">
+                    <div>
+                        @can('view', $ticket->asset)
+                            <a href="{{ route('assets.show', $ticket->asset) }}" class="font-medium text-teal-700 hover:text-teal-900">{{ $ticket->asset->asset_code }}</a>
+                        @else
+                            <span class="font-medium">{{ $ticket->asset->asset_code }}</span>
+                        @endcan
+                        @if ($ticket->asset->trashed())
+                            <span class="text-xs text-stone-500">(archived)</span>
+                        @elseif (! $ticket->asset->is_active)
+                            <span class="text-xs text-stone-500">(inactive)</span>
+                        @endif
+                    </div>
+                    <div>{{ $ticket->asset->name }}</div>
+                    <div class="text-xs text-stone-500">{{ $ticket->asset->category->name }} - {{ $ticket->asset->location }}</div>
+                    <x-asset-condition-badge :condition="$ticket->asset->condition" />
+                </div>
+            @else
+                No related asset
+            @endif
+        </dd>
+    </div>
+    <div>
         <dt class="font-medium text-stone-500">Requester</dt>
         <dd class="mt-1 text-stone-800">{{ $ticket->requester->name }}</dd>
     </div>

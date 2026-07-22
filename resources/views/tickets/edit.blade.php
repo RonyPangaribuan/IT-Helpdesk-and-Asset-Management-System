@@ -15,7 +15,7 @@
 
                     @if (Auth::user()->isAdmin())
                         <div class="rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-800 ring-1 ring-inset ring-amber-200">
-                            Admin edits in Milestone 2 are limited to category and priority.
+                            Admin edits are limited to category, priority, and related asset.
                         </div>
                     @else
                         <div>
@@ -68,6 +68,25 @@
                             <x-input-error :messages="$errors->get('location')" class="mt-2" />
                         </div>
                     @endunless
+
+                    @if ($ticket->asset?->trashed() || ($ticket->asset && ! $ticket->asset->isSelectableForTickets()))
+                        <div class="rounded-md bg-stone-50 px-4 py-3 text-sm text-stone-700 ring-1 ring-inset ring-stone-200">
+                            Current asset "{{ $ticket->asset->asset_code }}" is not selectable for new tickets. You may keep it or select an active asset.
+                        </div>
+                    @endif
+
+                    <div>
+                        <x-input-label for="asset_id" value="Related Asset" />
+                        <select id="asset_id" name="asset_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">No related asset</option>
+                            @foreach ($assets as $asset)
+                                <option value="{{ $asset->id }}" @selected((int) old('asset_id', $ticket->asset_id) === $asset->id)>
+                                    {{ $asset->asset_code }} - {{ $asset->name }} - {{ $asset->location }}{{ $asset->trashed() ? ' (archived)' : '' }}{{ ! $asset->isSelectableForTickets() && ! $asset->trashed() ? ' (inactive)' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('asset_id')" class="mt-2" />
+                    </div>
 
                     <div class="flex items-center justify-end gap-3">
                         <a href="{{ route('tickets.show', $ticket) }}" class="text-sm font-medium text-stone-600 hover:text-stone-950">Cancel</a>

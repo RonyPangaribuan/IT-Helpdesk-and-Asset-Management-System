@@ -22,6 +22,7 @@ class Ticket extends Model
         'requester_id',
         'technician_id',
         'ticket_category_id',
+        'asset_id',
         'title',
         'description',
         'location',
@@ -65,6 +66,11 @@ class Ticket extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(TicketCategory::class, 'ticket_category_id')->withTrashed();
+    }
+
+    public function asset(): BelongsTo
+    {
+        return $this->belongsTo(Asset::class)->withTrashed();
     }
 
     public function statusHistories(): HasMany

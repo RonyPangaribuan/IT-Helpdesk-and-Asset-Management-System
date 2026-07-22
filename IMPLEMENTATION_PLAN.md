@@ -4,9 +4,9 @@
 
 Primary source: `PRD.md` version 1.0.
 
-DelDesk is implemented as a Laravel monolith using Blade and Tailwind CSS. Work is intentionally staged by milestone. Milestones 1 through 4 now cover the project foundation, core ticket CRUD, authorization and workflow, ticket collaboration, private attachments, and ticket resolution.
+DelDesk is implemented as a Laravel monolith using Blade and Tailwind CSS. Work is intentionally staged by milestone. Milestones 1 through 5 now cover the project foundation, core ticket CRUD, authorization and workflow, ticket collaboration, private attachments, ticket resolution, asset management, ticket-to-asset links, and role-based dashboards.
 
-Asset CRUD, ticket-to-asset relationships, dashboard statistics, release polish, and deployment remain deferred to later milestones.
+Release polish, screenshots, ERD assets, demo video, deployment notes, and production deployment remain deferred to Milestone 6.
 
 ## Environment Findings
 
@@ -120,11 +120,18 @@ Decision: attachment files stay on the private local disk and are served only th
 
 Deliverables:
 
-- Asset category CRUD.
-- Asset CRUD.
-- Ticket-to-asset relationship.
-- Role dashboard statistics.
-- Simple dashboard tables/cards.
+- Asset condition enum and casting.
+- Asset category CRUD for administrators.
+- Asset CRUD for administrators with technician read-only access.
+- Asset search, filters, pagination, and archive behavior.
+- Optional ticket-to-asset relationship.
+- Ticket create/edit asset selection with active/non-retired asset rules.
+- Ticket list/detail linked asset display.
+- Asset detail related-ticket history scoped by role.
+- Role dashboard statistics through `DashboardService`.
+- Simple dashboard cards, tables, and breakdowns without chart libraries.
+
+Decision: asset codes are manually entered inventory identifiers and are normalized to uppercase. Retired assets are always stored as inactive.
 
 ### Milestone 6: Quality And Release
 
