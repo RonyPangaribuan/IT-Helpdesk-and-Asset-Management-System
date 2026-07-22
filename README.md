@@ -2,7 +2,7 @@
 
 DelDesk is a Laravel monolith MVP for an IT helpdesk and basic asset management system. The project follows the requirements in `PRD.md` and is being implemented gradually by milestone.
 
-Current milestone: Collaboration and Ticket Resolution.
+Current milestone: Asset Management and Role-Based Dashboard.
 
 ## Stack
 
@@ -102,6 +102,20 @@ All demo accounts use the password `password`.
 - Reopened tickets can be resumed by the assigned technician or reassigned by an admin.
 - Closed and Cancelled tickets are read-only for collaboration and workflow actions.
 
+### Milestone 5: Asset Management and Role-Based Dashboard
+
+- Asset condition enum: Good, Maintenance, Damaged, and Retired.
+- Admin-only asset category CRUD with archive through soft delete.
+- Asset CRUD with search, filters, pagination, active status, and soft-delete archive.
+- Technicians can view assets but cannot create, edit, or archive them.
+- Requesters cannot access inventory pages.
+- Optional related asset selection on ticket create and eligible ticket edit.
+- Ticket list/detail display linked asset information, including archived asset labels.
+- Asset detail shows related ticket history scoped by role.
+- Requester dashboard shows own ticket totals and recent tickets.
+- Technician dashboard shows assigned ticket totals and recent assigned tickets.
+- Admin dashboard shows operational ticket totals, active assets, category breakdown, priority breakdown, and recent tickets.
+
 ## Main Routes
 
 | Area | Route |
@@ -122,7 +136,12 @@ All demo accounts use the password `password`.
 | Delete ticket comment | `DELETE /tickets/{ticket}/comments/{comment}` |
 | Upload ticket attachments | `POST /tickets/{ticket}/attachments` |
 | Download ticket attachment | `GET /ticket-attachments/{attachment}/download` |
+| Assets | `/assets` |
+| Create asset | `/assets/create` |
+| Asset detail | `/assets/{asset}` |
+| Edit asset | `/assets/{asset}/edit` |
 | Admin ticket categories | `/admin/ticket-categories` |
+| Admin asset categories | `/admin/asset-categories` |
 
 ## Database And Seeders
 
@@ -130,9 +149,10 @@ All demo accounts use the password `password`.
 php artisan migrate:fresh --seed
 ```
 
-The seeders create demo users, seven default ticket categories, demo tickets across Open, Assigned, In Progress, Resolved, Closed, Reopened, and Cancelled states, and demo comments. Every seeded ticket has status history; workflow transitions are created through the same service used by the web actions. Attachment metadata factories exist for tests, but the demo seeder does not create fake physical attachment files.
+The seeders create demo users, seven default ticket categories, seven default asset categories, twelve demo assets, demo tickets across Open, Assigned, In Progress, Resolved, Closed, Reopened, and Cancelled states, and demo comments. Some demo tickets are linked to demo assets. Every seeded ticket has status history; workflow transitions are created through the same service used by the web actions. Attachment metadata factories exist for tests, but the demo seeder does not create fake physical attachment files.
 
 ## Not Implemented Yet
 
-- Asset CRUD.
-- Dashboard statistics.
+- Milestone 6 release polish.
+- Screenshots, ERD image, and demo video.
+- Deployment notes and production deployment.

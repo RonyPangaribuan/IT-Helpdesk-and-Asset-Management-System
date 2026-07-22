@@ -55,6 +55,17 @@
                     </div>
 
                     <div>
+                        <x-input-label for="asset_id" value="Related Asset" />
+                        <select id="asset_id" name="asset_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">No related asset</option>
+                            @foreach ($assets as $asset)
+                                <option value="{{ $asset->id }}" @selected((int) old('asset_id') === $asset->id)>{{ $asset->asset_code }} - {{ $asset->name }} - {{ $asset->location }}</option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('asset_id')" class="mt-2" />
+                    </div>
+
+                    <div>
                         <x-input-label for="attachments" value="Attachments" />
                         <input id="attachments" name="attachments[]" type="file" multiple accept=".jpg,.jpeg,.png,.pdf" class="mt-1 block w-full rounded-md border border-gray-300 text-sm text-stone-700 file:mr-4 file:border-0 file:bg-stone-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-stone-700 hover:file:bg-stone-200">
                         <p class="mt-2 text-xs text-stone-500">Optional JPG, PNG, or PDF files. Maximum 5 files, 5 MB each.</p>

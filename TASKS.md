@@ -117,13 +117,39 @@
 
 ## Milestone 5: Asset Management And Dashboard
 
-- [ ] Buat asset category CRUD.
-- [ ] Buat asset CRUD.
-- [ ] Hubungkan ticket dengan asset opsional.
-- [ ] Dashboard requester dengan statistik sendiri.
-- [ ] Dashboard technician dengan statistik assignment.
-- [ ] Dashboard admin dengan statistik operasional.
-- [ ] Tambahkan test asset dan dashboard.
+- [x] Buat PHP backed enum `AssetCondition`.
+- [x] Buat migration/model/factory/seeder `AssetCategory`.
+- [x] Buat admin-only Asset Category CRUD.
+- [x] Buat archive asset category dengan `is_active=false` dan soft delete.
+- [x] Buat tujuh default asset categories.
+- [x] Buat migration/model/factory/seeder `Asset`.
+- [x] Buat `AssetPolicy` untuk admin, technician, dan requester.
+- [x] Buat form request create/update asset category.
+- [x] Buat form request create/update asset.
+- [x] Implementasi asset CRUD admin.
+- [x] Batasi technician hanya asset list dan detail.
+- [x] Batasi requester dari seluruh inventory page.
+- [x] Implementasi asset search, filter, pagination, dan empty state.
+- [x] Tambahkan condition badge.
+- [x] Tambahkan `asset_id` nullable pada ticket.
+- [x] Hubungkan ticket dengan asset opsional.
+- [x] Tambahkan asset selection pada create ticket.
+- [x] Tambahkan asset update pada eligible ticket edit.
+- [x] Pastikan current inactive/archived asset dapat dipertahankan pada edit ticket.
+- [x] Tampilkan asset code pada ticket list.
+- [x] Tampilkan related asset pada ticket detail.
+- [x] Tampilkan related ticket history pada asset detail sesuai authorization.
+- [x] Buat `DashboardService`.
+- [x] Dashboard requester dengan statistik sendiri.
+- [x] Dashboard technician dengan statistik assignment.
+- [x] Dashboard admin dengan statistik operasional.
+- [x] Perbarui navigation desktop dan mobile.
+- [x] Tambahkan feature test asset category.
+- [x] Tambahkan feature test asset CRUD.
+- [x] Tambahkan feature test ticket-asset integration.
+- [x] Tambahkan feature test related ticket authorization.
+- [x] Tambahkan feature test dashboard per role.
+- [x] Jalankan migration, formatter, build, route audit, dan test.
 
 ## Milestone 6: Quality And Release
 

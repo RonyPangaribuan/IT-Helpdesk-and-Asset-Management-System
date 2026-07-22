@@ -23,9 +23,17 @@
                             {{ __('Create Ticket') }}
                         </x-nav-link>
                     @endif
+                    @if (Auth::user()->isAdmin() || Auth::user()->isTechnician())
+                        <x-nav-link :href="route('assets.index')" :active="request()->routeIs('assets.*')">
+                            {{ __('Assets') }}
+                        </x-nav-link>
+                    @endif
                     @if (Auth::user()->isAdmin())
                         <x-nav-link :href="route('admin.ticket-categories.index')" :active="request()->routeIs('admin.ticket-categories.*')">
                             {{ __('Ticket Categories') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.asset-categories.index')" :active="request()->routeIs('admin.asset-categories.*')">
+                            {{ __('Asset Categories') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -95,9 +103,17 @@
                     {{ __('Create Ticket') }}
                 </x-responsive-nav-link>
             @endif
+            @if (Auth::user()->isAdmin() || Auth::user()->isTechnician())
+                <x-responsive-nav-link :href="route('assets.index')" :active="request()->routeIs('assets.*')">
+                    {{ __('Assets') }}
+                </x-responsive-nav-link>
+            @endif
             @if (Auth::user()->isAdmin())
                 <x-responsive-nav-link :href="route('admin.ticket-categories.index')" :active="request()->routeIs('admin.ticket-categories.*')">
                     {{ __('Ticket Categories') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.asset-categories.index')" :active="request()->routeIs('admin.asset-categories.*')">
+                    {{ __('Asset Categories') }}
                 </x-responsive-nav-link>
             @endif
         </div>

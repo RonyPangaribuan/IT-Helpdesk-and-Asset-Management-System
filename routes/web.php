@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AssetCategoryController;
 use App\Http\Controllers\Admin\TicketCategoryController;
+use App\Http\Controllers\AssetController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TicketAssignmentController;
@@ -58,12 +60,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('tickets.comments.destroy');
     });
     Route::resource('tickets', TicketController::class);
+    Route::resource('assets', AssetController::class);
 
     Route::prefix('admin')
         ->name('admin.')
         ->middleware('role:admin')
         ->group(function () {
             Route::resource('ticket-categories', TicketCategoryController::class)
+                ->except('show');
+            Route::resource('asset-categories', AssetCategoryController::class)
                 ->except('show');
         });
 

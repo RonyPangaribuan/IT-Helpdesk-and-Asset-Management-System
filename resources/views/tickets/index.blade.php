@@ -65,6 +65,7 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Code</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Title</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Category</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Asset</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Priority</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Status</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Requester</th>
@@ -84,6 +85,16 @@
                                         {{ $ticket->category->name }}
                                         @if ($ticket->category->trashed())
                                             <span class="ml-1 text-xs text-stone-500">(archived)</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-4 text-sm text-stone-700">
+                                        @if ($ticket->asset)
+                                            {{ $ticket->asset->asset_code }}
+                                            @if ($ticket->asset->trashed())
+                                                <span class="ml-1 text-xs text-stone-500">(archived)</span>
+                                            @endif
+                                        @else
+                                            No asset
                                         @endif
                                     </td>
                                     <td class="px-4 py-4"><x-priority-badge :priority="$ticket->priority" /></td>
@@ -108,7 +119,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="px-4 py-12 text-center text-sm text-stone-600">
+                                    <td colspan="9" class="px-4 py-12 text-center text-sm text-stone-600">
                                         No tickets found.
                                     </td>
                                 </tr>

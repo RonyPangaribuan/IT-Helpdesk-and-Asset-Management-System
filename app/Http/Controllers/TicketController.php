@@ -6,6 +6,7 @@ use App\Enums\TicketPriority;
 use App\Enums\TicketStatus;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Models\Asset;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\User;
@@ -26,7 +27,7 @@ class TicketController extends Controller
 
         $user = $request->user();
         $query = Ticket::query()
-            ->with(['requester', 'technician', 'category'])
+            ->with(['requester', 'technician', 'category', 'asset'])
             ->latest();
 
         if ($user->isRequester()) {
@@ -41,7 +42,10 @@ class TicketController extends Controller
             $query->where(function (Builder $query) use ($search): void {
                 $query
                     ->where('ticket_code', 'like', "%{$search}%")
-                    ->orWhere('title', 'like', "%{$search}%");
+                    ->orWhere('title', 'like', "%{$search}%")
+                    ->orWhereHas('asset', function (Builder $query) use ($search): void {
+                        $query->where('asset_code', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -87,6 +91,7 @@ class TicketController extends Controller
         return view('tickets.create', [
             'categories' => TicketCategory::query()->where('is_active', true)->orderBy('name')->get(),
             'priorities' => TicketPriority::cases(),
+            'assets' => $this->assetsForTicketForm(),
         ]);
     }
 
@@ -117,6 +122,7 @@ class TicketController extends Controller
             'requester',
             'technician',
             'category',
+            'asset.category',
             'statusHistories.changedBy',
             'comments.author',
             'attachments.uploader',
@@ -145,12 +151,13 @@ class TicketController extends Controller
     {
         $this->authorize('update', $ticket);
 
-        $ticket->load('category');
+        $ticket->load(['category', 'asset.category']);
 
         return view('tickets.edit', [
             'ticket' => $ticket,
             'categories' => TicketCategory::query()->where('is_active', true)->orderBy('name')->get(),
             'priorities' => TicketPriority::cases(),
+            'assets' => $this->assetsForTicketForm($ticket),
         ]);
     }
 
@@ -165,6 +172,7 @@ class TicketController extends Controller
             $ticket->update([
                 'ticket_category_id' => $validated['ticket_category_id'],
                 'priority' => $validated['priority'],
+                'asset_id' => $validated['asset_id'] ?? null,
             ]);
         } else {
             $ticket->update($validated);
@@ -187,5 +195,24 @@ class TicketController extends Controller
         return redirect()
             ->route('tickets.index')
             ->with('success', 'Ticket archived.');
+    }
+
+    private function assetsForTicketForm(?Ticket $ticket = null)
+    {
+        $assets = Asset::query()
+            ->with('category')
+            ->selectableForTickets()
+            ->orderBy('asset_code')
+            ->get();
+
+        if ($ticket?->asset_id !== null && ! $assets->contains('id', $ticket->asset_id)) {
+            $currentAsset = $ticket->asset;
+
+            if ($currentAsset instanceof Asset) {
+                $assets->prepend($currentAsset);
+            }
+        }
+
+        return $assets;
     }
 }

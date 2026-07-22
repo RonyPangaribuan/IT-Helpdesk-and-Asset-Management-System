@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\TicketPriority;
 use App\Enums\TicketStatus;
+use App\Models\Asset;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\User;
@@ -26,6 +27,7 @@ class TicketFactory extends Factory
             'requester_id' => User::factory()->requester(),
             'technician_id' => null,
             'ticket_category_id' => TicketCategory::factory(),
+            'asset_id' => null,
             'title' => fake()->sentence(5),
             'description' => fake()->paragraph(),
             'location' => fake()->city().' Room '.fake()->numberBetween(100, 499),
@@ -52,6 +54,13 @@ class TicketFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'requester_id' => $requester->id,
+        ]);
+    }
+
+    public function withAsset(Asset $asset): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'asset_id' => $asset->id,
         ]);
     }
 
