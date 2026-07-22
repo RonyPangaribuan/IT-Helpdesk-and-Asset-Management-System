@@ -68,6 +68,7 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Priority</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Status</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Requester</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-stone-600">Technician</th>
                                 <th class="px-4 py-3 text-right text-xs font-semibold uppercase text-stone-600">Actions</th>
                             </tr>
                         </thead>
@@ -88,6 +89,7 @@
                                     <td class="px-4 py-4"><x-priority-badge :priority="$ticket->priority" /></td>
                                     <td class="px-4 py-4"><x-status-badge :status="$ticket->status" /></td>
                                     <td class="px-4 py-4 text-sm text-stone-700">{{ $ticket->requester->name }}</td>
+                                    <td class="px-4 py-4 text-sm text-stone-700">{{ $ticket->technician?->name ?? 'Unassigned' }}</td>
                                     <td class="px-4 py-4 text-right text-sm">
                                         <div class="flex justify-end gap-3">
                                             <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-teal-700 hover:text-teal-900">View</a>
@@ -106,7 +108,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-4 py-12 text-center text-sm text-stone-600">
+                                    <td colspan="8" class="px-4 py-12 text-center text-sm text-stone-600">
                                         No tickets found.
                                     </td>
                                 </tr>

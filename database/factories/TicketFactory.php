@@ -55,10 +55,47 @@ class TicketFactory extends Factory
         ]);
     }
 
+    public function open(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'technician_id' => null,
+            'status' => TicketStatus::Open,
+            'resolution_note' => null,
+            'resolved_at' => null,
+            'closed_at' => null,
+        ]);
+    }
+
     public function assignedTo(User $technician): static
     {
         return $this->state(fn (array $attributes) => [
             'technician_id' => $technician->id,
+            'status' => TicketStatus::Assigned,
+            'resolution_note' => null,
+            'resolved_at' => null,
+            'closed_at' => null,
+        ]);
+    }
+
+    public function inProgress(User $technician): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'technician_id' => $technician->id,
+            'status' => TicketStatus::InProgress,
+            'resolution_note' => null,
+            'resolved_at' => null,
+            'closed_at' => null,
+        ]);
+    }
+
+    public function cancelled(?User $technician = null): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'technician_id' => $technician?->id,
+            'status' => TicketStatus::Cancelled,
+            'resolution_note' => null,
+            'resolved_at' => null,
+            'closed_at' => null,
         ]);
     }
 

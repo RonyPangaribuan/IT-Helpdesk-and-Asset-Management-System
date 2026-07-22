@@ -8,6 +8,7 @@ use Database\Factories\TicketFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -66,8 +67,20 @@ class Ticket extends Model
         return $this->belongsTo(TicketCategory::class, 'ticket_category_id')->withTrashed();
     }
 
+    public function statusHistories(): HasMany
+    {
+        return $this->hasMany(TicketStatusHistory::class)
+            ->orderBy('created_at')
+            ->orderBy('id');
+    }
+
     public function isOpenAndUnassigned(): bool
     {
         return $this->status === TicketStatus::Open && $this->technician_id === null;
+    }
+
+    public function isReadOnly(): bool
+    {
+        return $this->status?->isTerminal() ?? false;
     }
 }

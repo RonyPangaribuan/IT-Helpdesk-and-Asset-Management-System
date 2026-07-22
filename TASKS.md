@@ -67,13 +67,29 @@
 
 ## Milestone 3: Authorization And Workflow
 
-- [ ] Perluas `TicketPolicy` untuk assignment dan status workflow.
-- [ ] Implementasi admin assignment.
-- [ ] Implementasi status transition service.
-- [ ] Implementasi status history.
-- [ ] Batasi teknisi hanya ticket assigned.
-- [ ] Batasi requester hanya ticket sendiri.
-- [ ] Tambahkan test transisi valid dan invalid.
+- [x] Perluas `TicketPolicy` untuk assignment dan status workflow.
+- [x] Implementasi admin assignment.
+- [x] Implementasi reassignment terbatas untuk ticket `assigned`.
+- [x] Implementasi status transition service.
+- [x] Implementasi domain exception untuk transisi invalid.
+- [x] Implementasi status history.
+- [x] Tambahkan backfill initial history untuk ticket Milestone 2.
+- [x] Buat initial history saat requester membuat ticket.
+- [x] Implementasi Start Work oleh assigned technician.
+- [x] Implementasi cancellation dengan reason wajib.
+- [x] Tampilkan workflow action berdasarkan policy.
+- [x] Tampilkan status timeline di detail ticket.
+- [x] Tambahkan informasi technician pada ticket list.
+- [x] Perbarui factory state workflow.
+- [x] Perbarui seeder demo workflow.
+- [x] Batasi teknisi hanya ticket assigned.
+- [x] Batasi requester hanya ticket sendiri.
+- [x] Tambahkan feature test assignment dan reassignment.
+- [x] Tambahkan feature test Start Work.
+- [x] Tambahkan feature test cancellation.
+- [x] Tambahkan feature test initial history dan atomic rollback.
+- [x] Tambahkan unit test transisi valid dan invalid.
+- [x] Jalankan migration, formatter, build, dan test.
 
 ## Milestone 4: Collaboration Features
 

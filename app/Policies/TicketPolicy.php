@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\User;
 
@@ -49,7 +50,7 @@ class TicketPolicy
     public function update(User $user, Ticket $ticket): bool
     {
         if ($user->isAdmin()) {
-            return true;
+            return ! $ticket->isReadOnly();
         }
 
         return $user->isRequester()
@@ -63,6 +64,41 @@ class TicketPolicy
     public function delete(User $user, Ticket $ticket): bool
     {
         return $user->isAdmin();
+    }
+
+    public function assign(User $user, Ticket $ticket): bool
+    {
+        return $user->isAdmin() && $ticket->isOpenAndUnassigned();
+    }
+
+    public function reassign(User $user, Ticket $ticket): bool
+    {
+        return $user->isAdmin()
+            && $ticket->status === TicketStatus::Assigned
+            && $ticket->technician_id !== null;
+    }
+
+    public function startWork(User $user, Ticket $ticket): bool
+    {
+        return $user->isTechnician()
+            && $ticket->status === TicketStatus::Assigned
+            && $ticket->technician_id === $user->id;
+    }
+
+    public function cancel(User $user, Ticket $ticket): bool
+    {
+        if ($user->isAdmin()) {
+            return in_array($ticket->status, [TicketStatus::Open, TicketStatus::Assigned], true);
+        }
+
+        return $user->isRequester()
+            && $ticket->requester_id === $user->id
+            && $ticket->isOpenAndUnassigned();
+    }
+
+    public function viewStatusHistory(User $user, Ticket $ticket): bool
+    {
+        return $this->view($user, $ticket);
     }
 
     /**

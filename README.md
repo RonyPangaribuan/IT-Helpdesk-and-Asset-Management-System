@@ -2,7 +2,7 @@
 
 DelDesk is a Laravel monolith MVP for an IT helpdesk and basic asset management system. The project follows the requirements in `PRD.md` and is being implemented gradually by milestone.
 
-Current milestone: Core Ticket CRUD.
+Current milestone: Authorization and Ticket Workflow.
 
 ## Stack
 
@@ -72,6 +72,18 @@ All demo accounts use the password `password`.
 - Minimal `TicketPolicy` for safe resource authorization.
 - Profile deletion guard for users linked to tickets.
 
+### Milestone 3: Authorization and Ticket Workflow
+
+- Ticket status history with read-only audit timeline.
+- Initial history is created atomically when a requester creates a ticket.
+- Admin ticket assignment from Open to Assigned.
+- Admin reassignment while a ticket is still Assigned.
+- Assigned technician Start Work action from Assigned to In Progress.
+- Requester and admin ticket cancellation rules.
+- Workflow service centralizes status and technician changes.
+- Expanded `TicketPolicy` abilities for workflow actions.
+- Demo seeder creates Open, Assigned, In Progress, and Cancelled tickets with consistent history.
+
 ## Main Routes
 
 | Area | Route |
@@ -80,6 +92,10 @@ All demo accounts use the password `password`.
 | Create ticket | `/tickets/create` |
 | Ticket detail | `/tickets/{ticket}` |
 | Edit ticket | `/tickets/{ticket}/edit` |
+| Assign ticket | `POST /tickets/{ticket}/assign` |
+| Reassign ticket | `PATCH /tickets/{ticket}/assign` |
+| Start work | `PATCH /tickets/{ticket}/start-work` |
+| Cancel ticket | `PATCH /tickets/{ticket}/cancel` |
 | Admin ticket categories | `/admin/ticket-categories` |
 
 ## Database And Seeders
@@ -88,13 +104,12 @@ All demo accounts use the password `password`.
 php artisan migrate:fresh --seed
 ```
 
-The seeders create demo users, seven default ticket categories, and open demo tickets. Assignment, status history, comments, attachments, and assets are not seeded yet because those belong to later milestones.
+The seeders create demo users, seven default ticket categories, and demo tickets across Open, Assigned, In Progress, and Cancelled states. Every seeded ticket has status history; workflow transitions are created through the same service used by the web actions.
 
 ## Not Implemented Yet
 
 - Asset CRUD.
-- Ticket assignment.
 - Ticket comments.
 - Ticket attachments.
-- Ticket status workflow/history.
+- Resolve Ticket, resolution notes, Close Ticket, and Reopen Ticket actions.
 - Dashboard statistics.

@@ -8,10 +8,11 @@ use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
+use App\Models\User;
+use App\Services\TicketWorkflowService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class TicketController extends Controller
@@ -92,26 +93,9 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTicketRequest $request): RedirectResponse
+    public function store(StoreTicketRequest $request, TicketWorkflowService $workflow): RedirectResponse
     {
-        $ticket = DB::transaction(function () use ($request): Ticket {
-            $ticket = Ticket::create([
-                ...$request->validated(),
-                'ticket_code' => Ticket::pendingCode(),
-                'requester_id' => $request->user()->id,
-                'technician_id' => null,
-                'status' => TicketStatus::Open,
-                'resolution_note' => null,
-                'resolved_at' => null,
-                'closed_at' => null,
-            ]);
-
-            $ticket->forceFill([
-                'ticket_code' => Ticket::codeFromId($ticket->id, $ticket->created_at?->year),
-            ])->save();
-
-            return $ticket;
-        });
+        $ticket = $workflow->createTicket($request->user(), $request->validated());
 
         return redirect()
             ->route('tickets.show', $ticket)
@@ -125,10 +109,17 @@ class TicketController extends Controller
     {
         $this->authorize('view', $ticket);
 
-        $ticket->load(['requester', 'technician', 'category']);
+        $this->authorize('viewStatusHistory', $ticket);
+
+        $ticket->load(['requester', 'technician', 'category', 'statusHistories.changedBy']);
 
         return view('tickets.show', [
             'ticket' => $ticket,
+            'technicians' => User::query()
+                ->where('role', User::ROLE_TECHNICIAN)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get(),
         ]);
     }
 

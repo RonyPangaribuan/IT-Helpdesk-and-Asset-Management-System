@@ -91,11 +91,14 @@ Note: the original plan placed `TicketPolicy` in Milestone 3, but Milestone 2 im
 
 Deliverables:
 
-- TicketPolicy.
-- Assignment controller/request.
+- Expanded TicketPolicy abilities for `assign`, `reassign`, `startWork`, `cancel`, and `viewStatusHistory`.
+- Assignment controller/request for initial assignment and limited reassignment.
+- Ticket workflow controller for Start Work and Cancel actions.
 - Ticket status transition service.
-- Status history records.
+- Status history records with backfill for existing Milestone 2 tickets.
 - Role-based ticket views and action availability.
+
+Milestone 3 active transitions are intentionally limited to `Open -> Assigned`, `Assigned -> In Progress`, `Open -> Cancelled`, and `Assigned -> Cancelled`. The enum still represents the full PRD status lifecycle, but Resolve, Close, and Reopen endpoints remain deferred to Milestone 4.
 
 ### Milestone 4: Collaboration Features
 
@@ -295,7 +298,11 @@ Later MVP routes:
 
 - `resource tickets` -> `TicketController`.
 - `POST tickets/{ticket}/assign` -> `TicketAssignmentController@store`.
-- `PATCH tickets/{ticket}/status` -> `TicketStatusController@update`.
+- `POST tickets/{ticket}/assign` -> `TicketAssignmentController@store`.
+- `PATCH tickets/{ticket}/assign` -> `TicketAssignmentController@update`.
+- `PATCH tickets/{ticket}/start-work` -> `TicketWorkflowController@startWork`.
+- `PATCH tickets/{ticket}/cancel` -> `TicketWorkflowController@cancel`.
+- `PATCH tickets/{ticket}/status` -> deferred; Milestone 3 uses specific workflow actions instead of a generic status endpoint.
 - `resource tickets.comments` -> `TicketCommentController` limited to store/update/destroy.
 - `POST tickets/{ticket}/attachments` -> `TicketAttachmentController@store`.
 - `GET ticket-attachments/{attachment}` -> `TicketAttachmentController@show`.
@@ -314,7 +321,7 @@ Later MVP routes:
 ### Controllers
 
 - Milestone 1: `DashboardController`, Breeze auth/profile controllers.
-- Later: `TicketController`, `TicketAssignmentController`, `TicketStatusController`, `TicketCommentController`, `TicketAttachmentController`, `TicketCategoryController`, `AssetController`, `AssetCategoryController`, `UserController`.
+- Later: `TicketController`, `TicketAssignmentController`, `TicketWorkflowController`, `TicketStatusController`, `TicketCommentController`, `TicketAttachmentController`, `TicketCategoryController`, `AssetController`, `AssetCategoryController`, `UserController`.
 
 ### Middleware
 
@@ -328,7 +335,7 @@ Later MVP routes:
 
 ### Form Requests
 
-- Later: `StoreTicketRequest`, `UpdateTicketRequest`, `AssignTicketRequest`, `UpdateTicketStatusRequest`, `StoreTicketCommentRequest`, `StoreTicketAttachmentRequest`, `StoreAssetRequest`, `UpdateAssetRequest`, `StoreCategoryRequest`, `UpdateCategoryRequest`, `StoreUserRequest`, `UpdateUserRequest`.
+- Later: `StoreTicketRequest`, `UpdateTicketRequest`, `AssignTicketRequest`, `CancelTicketRequest`, `UpdateTicketStatusRequest`, `StoreTicketCommentRequest`, `StoreTicketAttachmentRequest`, `StoreAssetRequest`, `UpdateAssetRequest`, `StoreCategoryRequest`, `UpdateCategoryRequest`, `StoreUserRequest`, `UpdateUserRequest`.
 - Milestone 1 keeps Breeze's existing registration/login/profile requests and customizes requester-only registration.
 
 ### Seeders And Factories
