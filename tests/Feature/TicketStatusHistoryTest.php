@@ -6,6 +6,7 @@ use App\Enums\TicketPriority;
 use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
+use App\Models\TicketComment;
 use App\Models\TicketStatusHistory;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
@@ -91,17 +92,23 @@ class TicketStatusHistoryTest extends TestCase
         $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::Open->value)->count());
         $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::Assigned->value)->count());
         $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::InProgress->value)->count());
+        $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::Resolved->value)->count());
+        $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::Closed->value)->count());
+        $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::Reopened->value)->count());
         $this->assertGreaterThan(0, Ticket::query()->where('status', TicketStatus::Cancelled->value)->count());
 
         $this->assertFalse(Ticket::query()->whereDoesntHave('statusHistories')->exists());
+        $this->assertGreaterThan(0, TicketComment::count());
 
         $historyCount = TicketStatusHistory::count();
         $ticketCount = Ticket::count();
+        $commentCount = TicketComment::count();
 
         $this->seed(TicketSeeder::class);
 
         $this->assertSame($ticketCount, Ticket::count());
         $this->assertSame($historyCount, TicketStatusHistory::count());
+        $this->assertSame($commentCount, TicketComment::count());
     }
 
     /**

@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateTicketRequest;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\User;
-use App\Services\TicketWorkflowService;
+use App\Services\TicketAttachmentService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -93,9 +93,13 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTicketRequest $request, TicketWorkflowService $workflow): RedirectResponse
+    public function store(StoreTicketRequest $request, TicketAttachmentService $attachments): RedirectResponse
     {
-        $ticket = $workflow->createTicket($request->user(), $request->validated());
+        $validated = $request->validated();
+        $uploadedFiles = $request->file('attachments', []);
+        unset($validated['attachments']);
+
+        $ticket = $attachments->createTicketWithAttachments($request->user(), $validated, (array) $uploadedFiles);
 
         return redirect()
             ->route('tickets.show', $ticket)
@@ -109,17 +113,28 @@ class TicketController extends Controller
     {
         $this->authorize('view', $ticket);
 
-        $this->authorize('viewStatusHistory', $ticket);
+        $ticket->load([
+            'requester',
+            'technician',
+            'category',
+            'statusHistories.changedBy',
+            'comments.author',
+            'attachments.uploader',
+        ]);
 
-        $ticket->load(['requester', 'technician', 'category', 'statusHistories.changedBy']);
+        $technicians = collect();
 
-        return view('tickets.show', [
-            'ticket' => $ticket,
-            'technicians' => User::query()
+        if (request()->user()->can('assign', $ticket) || request()->user()->can('reassign', $ticket)) {
+            $technicians = User::query()
                 ->where('role', User::ROLE_TECHNICIAN)
                 ->where('is_active', true)
                 ->orderBy('name')
-                ->get(),
+                ->get();
+        }
+
+        return view('tickets.show', [
+            'ticket' => $ticket,
+            'technicians' => $technicians,
         ]);
     }
 

@@ -91,15 +91,29 @@
 - [x] Tambahkan unit test transisi valid dan invalid.
 - [x] Jalankan migration, formatter, build, dan test.
 
-## Milestone 4: Collaboration Features
+## Milestone 4: Collaboration And Ticket Resolution
 
-- [ ] Buat komentar ticket.
-- [ ] Buat attachment upload melalui Laravel Storage.
-- [ ] Validasi JPG, JPEG, PNG, PDF maksimal 5 MB.
-- [ ] Implementasi authorization download attachment.
-- [ ] Implementasi resolve dengan resolution note.
-- [ ] Implementasi close dan reopen.
-- [ ] Tambahkan feature test komentar, attachment, resolve, close, reopen.
+- [x] Buat migration/model/factory `TicketComment`.
+- [x] Buat migration/model/factory `TicketAttachment`.
+- [x] Buat komentar ticket.
+- [x] Batasi komentar berdasarkan visibilitas ticket dan status aktif.
+- [x] Izinkan author mengedit komentar sendiri.
+- [x] Izinkan admin menghapus komentar.
+- [x] Buat attachment upload melalui Laravel Storage disk lokal.
+- [x] Validasi JPG, JPEG, PNG, PDF maksimal 5 MB.
+- [x] Batasi upload attachment untuk requester dan assigned technician pada ticket aktif.
+- [x] Implementasi authorization download attachment.
+- [x] Tambahkan attachment opsional pada create ticket.
+- [x] Implementasi resolve dengan resolution note wajib.
+- [x] Implementasi close oleh requester atau admin.
+- [x] Implementasi reopen oleh requester dari status resolved.
+- [x] Pastikan reopened ticket dapat dilanjutkan oleh assigned technician.
+- [x] Pastikan reopened ticket dapat direassign oleh admin.
+- [x] Pastikan closed/cancelled ticket read-only untuk kolaborasi.
+- [x] Perbarui detail ticket menjadi partial Blade untuk report, actions, attachments, discussion, timeline, dan info.
+- [x] Perbarui seeder demo untuk status Resolved, Closed, Reopened, dan komentar.
+- [x] Tambahkan feature test komentar, attachment, resolve, close, reopen.
+- [x] Jalankan migration, formatter, build, route audit, dan test.
 
 ## Milestone 5: Asset Management And Dashboard
 

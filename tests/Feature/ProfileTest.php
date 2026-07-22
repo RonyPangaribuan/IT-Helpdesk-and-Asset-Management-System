@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Ticket;
+use App\Models\TicketAttachment;
+use App\Models\TicketComment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -93,6 +96,36 @@ class ProfileTest extends TestCase
         $response
             ->assertSessionHasErrorsIn('userDeletion', 'password')
             ->assertRedirect('/profile');
+
+        $this->assertNotNull($user->fresh());
+    }
+
+    public function test_user_with_ticket_comment_cannot_delete_account(): void
+    {
+        $user = User::factory()->requester()->create();
+        $ticket = Ticket::factory()->create();
+        TicketComment::factory()->for($ticket)->forAuthor($user)->create();
+
+        $this->actingAs($user)
+            ->from('/profile')
+            ->delete('/profile', ['password' => 'password'])
+            ->assertRedirect('/profile')
+            ->assertSessionHasErrorsIn('userDeletion', 'password');
+
+        $this->assertNotNull($user->fresh());
+    }
+
+    public function test_user_with_uploaded_ticket_attachment_cannot_delete_account(): void
+    {
+        $user = User::factory()->requester()->create();
+        $ticket = Ticket::factory()->create();
+        TicketAttachment::factory()->for($ticket)->uploadedBy($user)->create();
+
+        $this->actingAs($user)
+            ->from('/profile')
+            ->delete('/profile', ['password' => 'password'])
+            ->assertRedirect('/profile')
+            ->assertSessionHasErrorsIn('userDeletion', 'password');
 
         $this->assertNotNull($user->fresh());
     }

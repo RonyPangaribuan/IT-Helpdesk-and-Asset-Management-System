@@ -9,7 +9,7 @@
     <div class="py-8">
         <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <div class="rounded-lg border border-stone-200 bg-white p-6 shadow-sm">
-                <form method="POST" action="{{ route('tickets.store') }}" class="space-y-5">
+                <form method="POST" action="{{ route('tickets.store') }}" enctype="multipart/form-data" class="space-y-5">
                     @csrf
 
                     <div>
@@ -52,6 +52,14 @@
                         <x-input-label for="location" value="Location" />
                         <x-text-input id="location" name="location" class="mt-1 block w-full" value="{{ old('location') }}" required maxlength="150" />
                         <x-input-error :messages="$errors->get('location')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="attachments" value="Attachments" />
+                        <input id="attachments" name="attachments[]" type="file" multiple accept=".jpg,.jpeg,.png,.pdf" class="mt-1 block w-full rounded-md border border-gray-300 text-sm text-stone-700 file:mr-4 file:border-0 file:bg-stone-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-stone-700 hover:file:bg-stone-200">
+                        <p class="mt-2 text-xs text-stone-500">Optional JPG, PNG, or PDF files. Maximum 5 files, 5 MB each.</p>
+                        <x-input-error :messages="$errors->get('attachments')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('attachments.*')" class="mt-2" />
                     </div>
 
                     <div class="flex items-center justify-end gap-3">

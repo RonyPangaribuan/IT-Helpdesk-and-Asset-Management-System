@@ -98,4 +98,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(TicketStatusHistory::class, 'changed_by');
     }
+
+    public function ticketComments(): HasMany
+    {
+        return $this->hasMany(TicketComment::class);
+    }
+
+    public function uploadedTicketAttachments(): HasMany
+    {
+        return $this->hasMany(TicketAttachment::class, 'uploaded_by');
+    }
 }

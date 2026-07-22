@@ -74,6 +74,20 @@ class Ticket extends Model
             ->orderBy('id');
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(TicketComment::class)
+            ->orderBy('created_at')
+            ->orderBy('id');
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(TicketAttachment::class)
+            ->orderBy('created_at')
+            ->orderBy('id');
+    }
+
     public function isOpenAndUnassigned(): bool
     {
         return $this->status === TicketStatus::Open && $this->technician_id === null;
@@ -82,5 +96,25 @@ class Ticket extends Model
     public function isReadOnly(): bool
     {
         return $this->status?->isTerminal() ?? false;
+    }
+
+    public function isCollaborationOpen(): bool
+    {
+        return ! $this->isReadOnly();
+    }
+
+    public function isRequesterEditable(): bool
+    {
+        return $this->isOpenAndUnassigned();
+    }
+
+    public function isAdminEditable(): bool
+    {
+        return in_array($this->status, [
+            TicketStatus::Open,
+            TicketStatus::Assigned,
+            TicketStatus::InProgress,
+            TicketStatus::Reopened,
+        ], true);
     }
 }

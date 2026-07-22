@@ -2,20 +2,21 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\TicketPriority;
 use App\Models\Ticket;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreTicketRequest extends FormRequest
+class StoreTicketAttachmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('create', Ticket::class) ?? false;
+        /** @var Ticket|null $ticket */
+        $ticket = $this->route('ticket');
+
+        return $ticket instanceof Ticket && ($this->user()?->can('uploadAttachment', $ticket) ?? false);
     }
 
     /**
@@ -26,21 +27,26 @@ class StoreTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:150'],
-            'description' => ['required', 'string', 'min:10'],
-            'ticket_category_id' => [
-                'required',
-                Rule::exists('ticket_categories', 'id')->where('is_active', true)->whereNull('deleted_at'),
-            ],
-            'priority' => ['required', Rule::in(TicketPriority::values())],
-            'location' => ['required', 'string', 'max:150'],
-            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments' => ['required', 'array', 'max:5'],
             'attachments.*' => [
+                'required',
                 'file',
                 'max:5120',
                 'mimes:jpg,jpeg,png,pdf',
                 'mimetypes:image/jpeg,image/png,application/pdf',
             ],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'attachments.required' => 'Please choose at least one attachment.',
+            'attachments.max' => 'You may upload a maximum of 5 files at once.',
+            'attachments.*.max' => 'Each attachment must be 5 MB or smaller.',
         ];
     }
 }
