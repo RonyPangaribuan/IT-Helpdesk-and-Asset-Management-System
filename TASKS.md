@@ -213,10 +213,11 @@
 - [ ] Record demo video.
 - [ ] Complete external deployment.
 - [ ] Run production smoke test.
-- [ ] Confirm CI green after push.
+- [x] Confirm CI green on GitHub Actions.
+- [ ] Complete manual functional QA.
 - [ ] Create tag `v1.0.0`.
 - [ ] Create GitHub Release.
-- [ ] Jalankan final verification penuh sebelum merge.
+- [x] Jalankan final verification penuh sebelum merge.
 
 ## UI/UX Polish
 
@@ -249,5 +250,15 @@
 - [x] Update Composer package metadata.
 - [x] Update documentation for deskIT.
 - [x] Add branding regression tests.
-- [ ] Capture new screenshots after rebranding.
-- [ ] Perform manual responsive visual audit after rebranding.
+
+Remaining screenshot and responsive work is tracked once under Milestone 6 and UI/UX Polish.
+
+## Repository Cleanup And Release Preparation
+
+- [x] Audit tracked and ignored repository files.
+- [x] Audit branding, debug markers, dead code, dependencies, links, and assets.
+- [x] Remove verified dead scaffold code and unused frontend dependencies.
+- [x] Add `docs/README.md` as the documentation index.
+- [x] Add `docs/MANUAL_QA_CHECKLIST.md`.
+- [x] Synchronize release, screenshot, deployment, architecture, ERD, security, and README documentation.
+- [x] Preserve migrations, workflow rules, authorization, and private attachment behavior.

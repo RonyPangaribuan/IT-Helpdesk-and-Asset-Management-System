@@ -2,7 +2,7 @@
 
 Target: `v1.0.0`
 
-Current status: Release candidate preparation.
+Current status: deskIT MVP v1.0.0 - Release Candidate.
 
 ## Completed Locally
 
@@ -26,11 +26,18 @@ Current status: Release candidate preparation.
 - [x] Full test suite passes final release verification.
 - [x] Pint passes final release verification.
 - [x] Frontend build passes final release verification.
-- [ ] Composer audit passes.
+- [x] Composer audit passes.
 - [x] Config cache passes.
 - [x] Route cache passes.
 - [x] View cache passes.
-- [ ] CI green on GitHub Actions.
+- [x] CI green on GitHub Actions.
+
+## Manual Quality Assurance
+
+- [ ] Manual functional QA completed.
+- [ ] Responsive audit completed at all required viewports.
+- [ ] Accessibility audit completed.
+- [ ] Failed or blocked QA cases resolved or accepted.
 
 ## Production Readiness
 
