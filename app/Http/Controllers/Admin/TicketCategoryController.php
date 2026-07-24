@@ -48,14 +48,6 @@ class TicketCategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(TicketCategory $ticketCategory): RedirectResponse
-    {
-        return redirect()->route('admin.ticket-categories.edit', $ticketCategory);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(TicketCategory $ticketCategory): View

@@ -48,14 +48,6 @@ class AssetCategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(AssetCategory $assetCategory): RedirectResponse
-    {
-        return redirect()->route('admin.asset-categories.edit', $assetCategory);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(AssetCategory $assetCategory): View
