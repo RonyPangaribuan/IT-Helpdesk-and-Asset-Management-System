@@ -8,9 +8,9 @@ deskIT is implemented as a Laravel monolith using Blade and Tailwind CSS. Work i
 
 Actual external deployment, real screenshots, a recorded demo video, a release tag, and a GitHub Release remain manual actions because no hosting target, credentials, image files, video URL, or release approval were provided.
 
-## Environment Findings
+## Initial Environment Findings
 
-- Repository state: empty Laravel application; only `PRD.md` exists.
+- Repository state at project kickoff: empty Laravel application; only `PRD.md` existed.
 - PHP: 8.4.8 CLI.
 - Composer: 2.8.9.
 - Node.js: v24.14.0.
@@ -20,6 +20,8 @@ Actual external deployment, real screenshots, a recorded demo video, a release t
 - Database CLIs available: MySQL 8.0.42 and PostgreSQL 18.3.
 - PHP database extensions available: `pdo_sqlite` and `sqlite3`.
 - PHP database extensions not detected: `pdo_mysql` and `pdo_pgsql`.
+
+The current repository now contains the completed Milestones 1 through 6. Automated verification, GitHub Actions, UI/UX polish, and the deskIT branding migration are complete. Manual functional QA, responsive and accessibility audits, screenshots, deployment, production smoke testing, demo video, tag, and GitHub Release remain release-candidate work.
 
 ## Technical Decisions
 
@@ -40,7 +42,7 @@ Actual external deployment, real screenshots, a recorded demo video, a release t
 
 5. Public registration role: always `requester`.
    - Rationale: the PRD forbids public creation of technician/admin accounts.
-   - Technician/admin users are created by seeders now and later by admin-only user management.
+   - Technician/admin users are created by seeders or administrator-only user management.
 
 6. Frontend stack: Blade, Tailwind CSS, and Breeze's small Alpine usage only.
    - No React, Inertia, real-time chat, AI, microservices, or non-MVP features.
@@ -52,9 +54,9 @@ Actual external deployment, real screenshots, a recorded demo video, a release t
 - Asset management is "limited" in MVP but also has full admin CRUD in scope. Decision: defer all asset work until Milestone 5 as written in the milestones.
 - Attachments are "Should Have" in priority but included in core acceptance criteria. Decision: defer until Milestone 4, then implement if time allows before final MVP.
 - Charts are recommended but optional. Decision: simple cards/tables only for MVP; no chart library unless explicitly needed later.
-- "Archive" appears for tickets/categories/assets. Decision: implement as soft delete or `is_active` depending on model semantics in later milestones.
-- Ticket comments edit window is not specified. Decision deferred to Milestone 4.
-- Ticket code sequence behavior under concurrency is not specified. Decision deferred to Milestone 2; likely a service with transaction-safe sequence.
+- "Archive" appears for tickets/categories/assets. Decision: use soft deletes and active flags according to each model's existing semantics.
+- Ticket comments edit window is not specified. Decision: authors may edit their own comments while the ticket remains open for collaboration; administrators may remove inappropriate comments.
+- Ticket code sequence behavior under concurrency is not specified. Decision: create with a unique pending UUID code, then derive the final code from the persisted ticket ID.
 
 ## Milestone Architecture
 
@@ -310,11 +312,11 @@ Relationships:
 - Belongs to ticket.
 - Belongs to changer user.
 
-## Planned Routes
+## Route Design
 
 Milestone 1 routes:
 
-- `GET /` -> redirect authenticated users to dashboard or guests to login/register entry.
+- `GET /` -> cache-safe branded landing page through `Route::view`.
 - Breeze authentication routes in `routes/auth.php`.
 - `GET /dashboard` -> `DashboardController`, auth required.
 - `GET /admin/dashboard` -> admin-only dashboard placeholder.
@@ -322,10 +324,9 @@ Milestone 1 routes:
 - `GET /requester/dashboard` -> requester-only dashboard placeholder.
 - Breeze profile routes.
 
-Later MVP routes:
+Implemented MVP routes:
 
 - `resource tickets` -> `TicketController`.
-- `POST tickets/{ticket}/assign` -> `TicketAssignmentController@store`.
 - `POST tickets/{ticket}/assign` -> `TicketAssignmentController@store`.
 - `PATCH tickets/{ticket}/assign` -> `TicketAssignmentController@update`.
 - `PATCH tickets/{ticket}/start-work` -> `TicketWorkflowController@startWork`.
@@ -337,42 +338,63 @@ Later MVP routes:
 - `resource tickets.comments` -> `TicketCommentController` limited to store/update/destroy.
 - `POST tickets/{ticket}/attachments` -> `TicketAttachmentController@store`.
 - `GET ticket-attachments/{attachment}/download` -> `TicketAttachmentController@download`.
-- `resource admin/ticket-categories` -> `TicketCategoryController`.
-- `resource admin/asset-categories` -> `AssetCategoryController`.
+- `resource admin/ticket-categories` except `show` -> `TicketCategoryController`.
+- `resource admin/asset-categories` except `show` -> `AssetCategoryController`.
 - `resource assets` -> `AssetController`.
-- `resource admin/users` -> `UserController`.
+- `resource admin/users` limited to `index`, `create`, `store`, `edit`, and `update` -> `UserController`.
 
-## Planned Classes
+## Implemented Classes
 
 ### Models
 
-- Milestone 1: `User`.
-- Later: `Ticket`, `TicketCategory`, `TicketComment`, `TicketAttachment`, `TicketStatusHistory`, `Asset`, `AssetCategory`.
+- `User`
+- `Ticket`
+- `TicketCategory`
+- `TicketComment`
+- `TicketAttachment`
+- `TicketStatusHistory`
+- `Asset`
+- `AssetCategory`
 
 ### Controllers
 
-- Milestone 1: `DashboardController`, Breeze auth/profile controllers.
-- Later: `TicketController`, `TicketAssignmentController`, `TicketWorkflowController`, `TicketStatusController`, `TicketCommentController`, `TicketAttachmentController`, `TicketCategoryController`, `AssetController`, `AssetCategoryController`, `UserController`.
+- `DashboardController` and Breeze authentication/profile controllers.
+- `TicketController`
+- `TicketAssignmentController`
+- `TicketWorkflowController`
+- `TicketCommentController`
+- `TicketAttachmentController`
+- `Admin\TicketCategoryController`
+- `AssetController`
+- `Admin\AssetCategoryController`
+- `Admin\UserController`
 
 ### Middleware
 
-- Milestone 1: `EnsureUserHasRole`.
-- Later: route-specific policy checks and possibly active-user guard.
+- `EnsureUserHasRole`
+- `EnsureUserIsActive`
+- `AddSecurityHeaders`
 
 ### Policies
 
-- Later: `TicketPolicy`, `TicketCommentPolicy`, `TicketAttachmentPolicy`, `AssetPolicy`, `UserPolicy`.
-- Milestone 1 uses middleware-level role checks first; policies begin when protected resources exist.
+- `TicketPolicy`
+- `TicketCommentPolicy`
+- `TicketAttachmentPolicy`
+- `AssetPolicy`
+- `UserPolicy`
 
 ### Form Requests
 
-- Later: `StoreTicketRequest`, `UpdateTicketRequest`, `AssignTicketRequest`, `CancelTicketRequest`, `UpdateTicketStatusRequest`, `StoreTicketCommentRequest`, `StoreTicketAttachmentRequest`, `StoreAssetRequest`, `UpdateAssetRequest`, `StoreCategoryRequest`, `UpdateCategoryRequest`, `StoreUserRequest`, `UpdateUserRequest`.
-- Milestone 1 keeps Breeze's existing registration/login/profile requests and customizes requester-only registration.
+- Ticket requests: `StoreTicketRequest`, `UpdateTicketRequest`, `AssignTicketRequest`, `CancelTicketRequest`, `ResolveTicketRequest`, and `ReopenTicketRequest`.
+- Collaboration requests: `StoreTicketCommentRequest`, `UpdateTicketCommentRequest`, and `StoreTicketAttachmentRequest`.
+- Category requests: ticket-category and asset-category store/update requests.
+- Asset requests: `StoreAssetRequest` and `UpdateAssetRequest`.
+- User requests: `StoreUserRequest`, `UpdateUserRequest`, and `ProfileUpdateRequest`.
 
 ### Seeders And Factories
 
-- Milestone 1: `DemoUserSeeder`, default `DatabaseSeeder`, default `UserFactory` updated with requester role defaults.
-- Later: category, asset, ticket, comment, attachment, and status history seeders/factories.
+- Demo users, ticket categories, asset categories, assets, and ticket workflow data are created through dedicated seeders.
+- Factories cover users, tickets, categories, comments, attachments, status histories, and assets.
 
 ## Testing Plan
 

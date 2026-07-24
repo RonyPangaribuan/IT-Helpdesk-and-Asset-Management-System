@@ -2,7 +2,7 @@
 
 Status: To be recorded.
 
-Target length: 3 to 5 minutes.
+Target length: 2 to 4 minutes.
 
 ## Demo Accounts
 
@@ -34,9 +34,9 @@ All local demo accounts use password `password`.
 13. Open assigned tickets, start work, add a comment, and resolve the ticket with a resolution note.
 14. Log out and log back in as the requester.
 15. Open the resolved ticket and either close it or reopen it with a reason.
-16. Show asset management list and an asset detail page with related ticket history.
-17. Show admin user management and active/inactive account controls.
-18. Show terminal output for `php artisan test` and mention GitHub Actions CI checks.
+16. Log out, return as the administrator, and show the asset list plus an asset detail page with related ticket history.
+17. Show administrator user management and active/inactive account controls.
+18. Show actual terminal output for `php artisan test` and the successful GitHub Actions CI run.
 19. Close with project status: MVP v1.0.0 release candidate, pending real deployment, screenshots, and recorded demo video.
 
 ## Recording Checklist

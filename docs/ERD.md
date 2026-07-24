@@ -110,7 +110,7 @@ erDiagram
 
     sessions {
         string id PK
-        bigint user_id FK "nullable"
+        bigint user_id "nullable, indexed"
         string ip_address
         text user_agent
         longtext payload
@@ -168,5 +168,6 @@ Notes:
 
 - `tickets.technician_id` is nullable until an administrator assigns a technician.
 - `tickets.asset_id` is nullable because tickets can be created without a related asset.
+- `sessions.user_id` is an indexed nullable reference in the Laravel session table; the migration does not add a database foreign-key constraint.
 - Ticket, category, comment, and asset archive behavior uses soft deletes where implemented.
 - Attachments are private files referenced by database metadata and served through authorization.

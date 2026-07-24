@@ -26,7 +26,7 @@ Primary source: `PRD.md` version 1.0.
 | Custom error pages | Implemented | `resources/views/errors/403.blade.php`, `404`, `419`, `500` | `ReleaseReadinessTest` | Pages do not expose stack traces or server paths. |
 | Public landing page | Implemented | Branded `welcome.blade.php` and cache-safe `Route::view` | `ReleaseReadinessTest` | No demo credentials or internal stats are shown. |
 | Production cache compatibility | Implemented | Route closure removed; config/route/view cache verified locally and in CI | `ReleaseReadinessTest`, final verification | Generated cache files are not committed. |
-| GitHub Actions CI | Implemented | `.github/workflows/ci.yml` job `laravel-quality` | Local YAML and command verification | Branch-level GitHub result requires push and completed Actions run. |
+| GitHub Actions CI | Implemented | `.github/workflows/ci.yml` job `laravel-quality` | Local command verification and successful GitHub Actions run on `master` | Future pull requests must remain green before merge. |
 | README final | Implemented | Portfolio-ready README with install, demo, CI, docs, limits | Manual review | No live URL is claimed. |
 | ERD documentation | Implemented | `docs/ERD.md` Mermaid ERD from actual migrations | Manual review | PNG export is not claimed. |
 | Architecture documentation | Implemented | `docs/ARCHITECTURE.md` | Manual review | Monolith boundaries and request lifecycle documented. |

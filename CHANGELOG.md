@@ -27,6 +27,8 @@ The format is based on Keep a Changelog, and this project uses semantic versioni
 
 - Rebranded the application from DelDesk to deskIT.
 - Added new deskIT visual identity and application icons.
+- Removed verified unused scaffold components and frontend dependencies.
+- Organized release documentation and added a manual QA checklist.
 
 ### Security
 

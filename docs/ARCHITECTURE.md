@@ -94,21 +94,37 @@ Enums keep status, priority, and asset condition values consistent:
 
 ### Blade Views
 
-The MVP frontend uses Blade templates and Tailwind CSS. Tables use horizontal overflow wrappers, forms use labels and validation errors, and navigation adapts to the authenticated role.
+The MVP frontend uses Blade templates and Tailwind CSS. Tables use horizontal overflow wrappers or mobile card alternatives, forms use labels and validation errors, and navigation adapts to the authenticated role.
 
-Alpine.js is only used by Breeze layout components for small interactions such as dropdowns and modals.
+Alpine.js is limited to small interactions such as the mobile navigation, confirmation modal, and transient profile feedback.
 
 ## Private Storage
 
 Ticket attachments are stored on `config('deskit.attachment_disk')`, which defaults to `local`. The local disk points to private storage. Files are downloaded through `TicketAttachmentController` only after policy authorization.
 
-The app does not create public attachment URLs and does not require `storage:link` for private ticket files.
+The app does not create public attachment URLs and does not require `storage:link` for private ticket files. The configured attachment disk must remain private and persistent in production.
 
 ## Authentication And Authorization
 
 Laravel Breeze handles session authentication and password reset scaffolding. Public registration always creates active requester accounts.
 
 Inactive accounts are blocked in `LoginRequest`. If an already-authenticated user is later deactivated, `EnsureUserIsActive` logs them out, invalidates the session, regenerates the CSRF token, and redirects to login.
+
+Resource scope remains role-specific:
+
+- Requesters see their own tickets and cannot access asset inventory.
+- Technicians see assigned tickets and have read-only asset access.
+- Administrators see all tickets and manage assignment, users, categories, and assets.
+
+User-management rules prevent an administrator from deactivating or demoting themself, preserve at least one active administrator, prevent deactivation of technicians with active assigned work, and reject role changes that would invalidate requester or technician history.
+
+## Dashboard Scope
+
+`DashboardService` applies the same role boundaries as ticket listing:
+
+- Requester totals and recent records are limited to tickets they submitted.
+- Technician totals and recent records are limited to tickets assigned to them.
+- Administrator totals include all non-archived tickets, category and priority breakdowns, and selectable active assets.
 
 ## Database Relationships
 
