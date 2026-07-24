@@ -26,7 +26,8 @@
                             <form method="POST" action="{{ route('tickets.comments.update', [$ticket, $comment]) }}" class="mt-3 space-y-3">
                                 @csrf
                                 @method('PATCH')
-                                <textarea name="body" rows="3" class="app-input" required>{{ old('body', $comment->body) }}</textarea>
+                                <x-input-label for="comment_body_{{ $comment->id }}" value="Edit Comment" class="sr-only" />
+                                <textarea id="comment_body_{{ $comment->id }}" name="body" rows="3" class="app-input" required>{{ old('body', $comment->body) }}</textarea>
                                 <x-input-error :messages="$errors->get('body')" class="mt-2" />
                                 <x-primary-button>Update Comment</x-primary-button>
                             </form>

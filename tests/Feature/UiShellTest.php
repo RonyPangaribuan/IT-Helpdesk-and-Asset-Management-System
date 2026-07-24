@@ -63,6 +63,18 @@ class UiShellTest extends TestCase
             ->assertSee('aria-label="Close navigation menu"', false);
     }
 
+    public function test_account_deactivation_modal_has_accessible_dialog_markup(): void
+    {
+        $requester = User::factory()->requester()->create();
+
+        $this->actingAs($requester)
+            ->get(route('profile.edit'))
+            ->assertOk()
+            ->assertSee('role="dialog"', false)
+            ->assertSee('aria-modal="true"', false)
+            ->assertSee('aria-label="Confirm account deactivation"', false);
+    }
+
     public function test_landing_auth_and_main_pages_render_with_polished_ui(): void
     {
         config(['app.name' => 'deskIT']);

@@ -126,11 +126,13 @@ class ReleaseReadinessTest extends TestCase
             ->get(route('assets.index'))
             ->assertForbidden()
             ->assertSeeText('Access denied')
+            ->assertSee('favicon-32x32.png', false)
             ->assertDontSeeText('SQLSTATE');
 
         $this->get('/missing-deskit-page')
             ->assertNotFound()
             ->assertSeeText('Page not found')
+            ->assertSee('favicon.ico', false)
             ->assertDontSeeText(base_path());
     }
 

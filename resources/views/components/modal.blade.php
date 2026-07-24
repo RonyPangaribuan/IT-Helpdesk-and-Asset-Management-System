@@ -1,7 +1,8 @@
 @props([
     'name',
     'show' => false,
-    'maxWidth' => '2xl'
+    'maxWidth' => '2xl',
+    'title' => null,
 ])
 
 @php
@@ -48,6 +49,9 @@ $maxWidth = [
     x-show="show"
     class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
     style="display: {{ $show ? 'block' : 'none' }};"
+    role="dialog"
+    aria-modal="true"
+    @if ($title) aria-label="{{ $title }}" @endif
 >
     <div
         x-show="show"
