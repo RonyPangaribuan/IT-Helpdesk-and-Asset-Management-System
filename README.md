@@ -1,134 +1,110 @@
 # deskIT
 
-![CI](https://github.com/RonyPangaribuan/IT-Helpdesk-and-Asset-Management-System/actions/workflows/ci.yml/badge.svg)
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+<p align="center">
+  <img src="public/branding/deskit-mark-192.png" width="96" alt="deskIT brand mark">
+</p>
 
-deskIT is a Laravel monolith MVP for IT helpdesk ticketing and basic asset management. It is built as a portfolio project for demonstrating Laravel fundamentals: authentication, authorization, Eloquent relationships, Form Requests, policies, middleware, services, migrations, seeders, factories, Blade, Tailwind CSS, and automated tests.
+[![CI](https://github.com/RonyPangaribuan/IT-Helpdesk-and-Asset-Management-System/actions/workflows/ci.yml/badge.svg)](https://github.com/RonyPangaribuan/IT-Helpdesk-and-Asset-Management-System/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Project status: **MVP v1.0.0 - Release Candidate**
+deskIT is an IT Helpdesk & Asset Management application built as a Laravel monolith. It centralizes support requests, technician assignments, issue progress, resolutions, collaboration, and basic asset records in one role-aware workspace.
 
-## Problem Statement
+**Status:** Feature-complete MVP — v1.0.0 Release Candidate
 
-IT support reports are often scattered across chat, verbal requests, and spreadsheets. deskIT centralizes support tickets, assignment, progress tracking, repair history, comments, attachments, and related asset records.
+## Overview
 
-## Main Features
+IT support reports are often scattered across chat, verbal conversations, and spreadsheets. Requests can be missed, users have limited progress visibility, and repair histories become difficult to trace.
 
-- Laravel Breeze authentication with Blade.
-- Three roles: administrator, technician, requester.
-- Public registration restricted to requester accounts.
-- Active account enforcement.
-- Admin user management.
-- Ticket CRUD with search, filters, pagination, and archive.
-- Ticket assignment and reassignment.
-- Ticket status workflow with read-only history.
-- Ticket comments.
-- Private ticket attachments.
+deskIT provides a structured ticket lifecycle for campuses, organizations, and small companies. Requesters report issues, administrators coordinate work, and technicians document progress and resolution while the application preserves comments, private attachments, status history, and related asset context.
+
+## Application Preview
+
+All screenshots below were captured from the running application with local demo data.
+
+### Landing Page
+
+![deskIT landing page](public/images/screenshots/01-landing-page.png)
+
+### Role-Based Dashboards
+
+| Requester | Administrator |
+| --- | --- |
+| ![Requester dashboard](public/images/screenshots/02-requester-dashboard.png) | ![Administrator dashboard](public/images/screenshots/03-admin-dashboard.png) |
+
+### Ticket Workflow
+
+![Ticket detail and workflow](public/images/screenshots/04-ticket-detail.png)
+
+### Asset Management and Mobile View
+
+| Asset Management | Mobile Interface |
+| --- | --- |
+| ![Asset management](public/images/screenshots/05-asset-management.png) | ![Mobile ticket list](public/images/screenshots/06-mobile-view.png) |
+
+## Key Features
+
+- Laravel Breeze authentication with public registration restricted to requester accounts.
+- Administrator, technician, and requester roles with active-account enforcement.
+- Ticket creation, scoped listing, editing, archive, search, filters, and pagination.
+- Technician assignment, reassignment, and controlled status transitions.
+- Read-only ticket status history for important workflow events.
+- Ticket comments and private JPG, JPEG, PNG, or PDF attachments up to 5 MB each.
 - Ticket category and asset category management.
-- Basic asset management.
-- Optional ticket-to-asset relationship.
-- Role-based dashboard statistics.
-- Demo seed data for local demonstration.
-- GitHub Actions CI.
+- Basic asset management with search, filters, archive, and condition tracking.
+- Optional ticket-to-asset relationships and role-scoped asset history.
+- Role-based dashboards backed by current database data.
+- Administrator user management with safeguards for active work and the final administrator.
+- Automated feature and unit tests plus GitHub Actions CI.
 
-## UI Overview
+## User Roles
 
-deskIT uses a clean SaaS dashboard style for the Blade MVP. The authenticated app has a role-aware sidebar, a compact sticky header, reusable page headers, neutral white content surfaces, subtle borders, and consistent status badges.
-
-The UI direction is intentionally restrained:
-
-- Slate/white surfaces for the main workspace.
-- Indigo as the primary navigation and action color.
-- Blue, amber, emerald, red, violet, and slate only for status, priority, condition, and feedback.
-- Desktop tables with mobile card alternatives for ticket, asset, and user lists.
-- Ticket detail pages with workflow progress, next-action context, report detail, resolution, discussion, attachments, timeline, and metadata.
-- Form sections that separate identity, classification, asset context, files, access, and security.
-
-## Role And Permission Matrix
-
-| Capability | Requester | Technician | Administrator |
-| --- | --- | --- | --- |
-| Register publicly | Yes | No | No |
-| Create ticket | Yes | No | No |
-| View ticket list | Own tickets | Assigned tickets | All tickets |
-| Edit ticket | Own open unassigned tickets | No | Category, priority, asset |
-| Archive ticket | No | No | Yes |
-| Assign technician | No | No | Yes |
-| Start work | No | Assigned only | No |
-| Resolve ticket | No | Assigned in-progress only | No |
-| Close resolved ticket | Own ticket | No | Yes |
-| Reopen resolved ticket | Own ticket | No | No |
-| Comment | Visible active tickets | Assigned active tickets | Visible active tickets |
-| Upload attachment | Own active tickets | Assigned active tickets | No |
-| Download attachment | Authorized own tickets | Assigned tickets | All visible tickets |
-| Manage users | No | No | Yes |
-| Manage ticket categories | No | No | Yes |
-| Manage assets | No | Read only | Yes |
-| View dashboard | Own data | Assigned data | Operational overview |
+| Role | Main Responsibilities |
+| --- | --- |
+| **Requester** | Create and monitor own tickets, comment, upload attachments, and close or reopen resolved tickets. |
+| **Technician** | Handle assigned tickets, start work, collaborate, upload attachments, write resolution notes, and resolve work. |
+| **Administrator** | View all tickets, assign or reassign technicians, manage users, categories, and assets, and monitor operational data. |
 
 ## Ticket Workflow
 
-Allowed transitions:
-
 ```text
-Open -> Assigned
-Open -> Cancelled
-Assigned -> In Progress
-Assigned -> Cancelled
-In Progress -> Resolved
-Resolved -> Closed
-Resolved -> Reopened
-Reopened -> Assigned
-Reopened -> In Progress
+Open -> Assigned -> In Progress -> Resolved -> Closed
 ```
 
-Every important transition creates a `ticket_status_histories` record. Invalid transitions are rejected with safe validation-style errors.
-
-## Asset Management
-
-Assets have code, name, category, brand, model, serial number, location, condition, description, and active status. Administrators can create, edit, view, and archive assets. Technicians can view assets but cannot modify them. Requesters cannot access inventory pages.
-
-Asset conditions:
-
-- Good
-- Maintenance
-- Damaged
-- Retired
-
-Retired assets are stored as inactive and cannot be selected for new tickets.
-
-## Architecture Overview
-
-deskIT uses a single Laravel application:
-
-- Routes in `routes/web.php`.
-- Controllers for HTTP coordination.
-- Form Requests for validation.
-- Policies and middleware for authorization.
-- Services for ticket workflow, attachments, dashboards, and user management.
-- Eloquent models for domain relationships.
-- Blade views and Tailwind CSS for the MVP frontend.
-
-See [Architecture](docs/ARCHITECTURE.md) for more detail.
+- A requester can reopen a Resolved ticket when the issue remains.
+- A Reopened ticket can return to Assigned or In Progress.
+- Eligible Open or Assigned tickets can be cancelled.
+- Closed and Cancelled tickets are read-only.
+- Every important transition creates a status-history record.
 
 ## Technology Stack
 
-- PHP 8.2 or newer.
-- Laravel 12.x.
-- Laravel Breeze.
-- Blade.
-- Tailwind CSS.
-- Alpine.js only for small Breeze interactions.
-- Eloquent ORM.
-- SQLite for local development and tests.
-- PostgreSQL or MySQL recommended for production.
-- Vite.
-- PHPUnit.
-- Laravel Pint.
-- GitHub Actions.
+| Area | Technology |
+| --- | --- |
+| Backend | PHP 8.2+, Laravel 12 |
+| Frontend | Blade, Tailwind CSS, Alpine.js |
+| Database | SQLite for local/testing; MySQL or PostgreSQL for production |
+| ORM | Eloquent |
+| Authentication | Laravel Breeze |
+| Build | Vite |
+| Testing | PHPUnit |
+| Code quality | Laravel Pint, Composer Audit |
+| CI | GitHub Actions |
+
+## Architecture
+
+deskIT is a single deployable Laravel application with server-rendered Blade views. It keeps validation, authorization, workflow operations, persistence, and presentation within clear framework boundaries:
+
+- Routes define HTTP endpoints.
+- Controllers coordinate requests and responses.
+- Form Requests validate and authorize input.
+- Policies and middleware enforce role and resource access.
+- Services manage ticket workflow, attachments, dashboard queries, and user-management rules.
+- Eloquent models define domain relationships.
+- Blade components provide reusable interface elements.
 
 ## Database Overview
 
-Main tables:
+The main application tables are:
 
 - `users`
 - `ticket_categories`
@@ -138,171 +114,129 @@ Main tables:
 - `ticket_comments`
 - `ticket_attachments`
 - `ticket_status_histories`
-- `sessions`
-- Laravel cache and job tables
 
-See [ERD](docs/ERD.md) for the Mermaid diagram.
+```mermaid
+erDiagram
+    USER ||--o{ TICKET : creates
+    USER o|--o{ TICKET : handles
+    TICKET_CATEGORY ||--o{ TICKET : classifies
+    ASSET_CATEGORY ||--o{ ASSET : groups
+    ASSET o|--o{ TICKET : relates_to
+    TICKET ||--o{ TICKET_COMMENT : has
+    TICKET ||--o{ TICKET_ATTACHMENT : has
+    TICKET ||--o{ TICKET_STATUS_HISTORY : records
+```
 
-## Local Installation: Windows
+## Local Installation
 
-```bash
+### Windows PowerShell
+
+```powershell
+git clone https://github.com/RonyPangaribuan/IT-Helpdesk-and-Asset-Management-System.git
+cd IT-Helpdesk-and-Asset-Management-System
 composer install
 npm.cmd install
 copy .env.example .env
+New-Item -ItemType File -Path database/database.sqlite -Force
 php artisan key:generate
 php artisan migrate:fresh --seed
 npm.cmd run build
-php artisan test
+php artisan serve
 ```
 
-Use `npm.cmd` on Windows PowerShell if the `npm.ps1` shim is blocked by execution policy.
-
-## Local Installation: Linux/macOS
+### Linux and macOS
 
 ```bash
+git clone https://github.com/RonyPangaribuan/IT-Helpdesk-and-Asset-Management-System.git
+cd IT-Helpdesk-and-Asset-Management-System
 composer install
 npm install
 cp .env.example .env
+touch database/database.sqlite
 php artisan key:generate
 php artisan migrate:fresh --seed
 npm run build
-php artisan test
+php artisan serve
 ```
 
-## Environment Configuration
-
-Local `.env.example` defaults to SQLite:
-
-```text
-DB_CONNECTION=sqlite
-FILESYSTEM_DISK=local
-TICKET_ATTACHMENT_DISK=local
-```
-
-Create `database/database.sqlite` if it does not exist.
-
-Production configuration should start from `.env.production.example`. Do not commit a real `.env` file.
-
-## Migration And Seeder
-
-```bash
-php artisan migrate:fresh --seed
-```
-
-The demo seeders create:
-
-- 1 active administrator.
-- 2 active technicians.
-- 3 active requesters.
-- 7 ticket categories.
-- 7 asset categories.
-- 12 demo assets.
-- 24 demo tickets across every status and priority.
-- Demo comments and consistent status histories.
+The local environment defaults to SQLite. After starting the server, open `http://127.0.0.1:8000`.
 
 ## Demo Accounts
 
-All demo accounts use password `password`.
-
-Warning:
-
-- Demo accounts are for local/demo use only.
-- Do not use demo passwords in production.
-- Do not run demo seeders in production without an explicit decision.
+All demo accounts use the password `password`.
 
 | Role | Email |
 | --- | --- |
-| Admin | `admin@deskit.test` |
+| Administrator | `admin@deskit.test` |
 | Technician | `technician1@deskit.test` |
 | Technician | `technician2@deskit.test` |
 | Requester | `requester1@deskit.test` |
 | Requester | `requester2@deskit.test` |
 | Requester | `requester3@deskit.test` |
 
-## Test Instructions
+These accounts and their password are for local demonstration only. Never reuse them in production, and do not run the demo seeder in production without an explicit decision.
+
+## Testing and Code Quality
 
 ```bash
 php artisan test
 vendor/bin/pint --test
-npm.cmd run build
+composer validate --strict
+composer audit --locked
 ```
 
-Additional release checks:
+Frontend production build:
 
 ```bash
-composer audit --locked
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan optimize:clear
+npm run build
 ```
 
-## Continuous Integration
+Use `npm.cmd run build` on Windows when the PowerShell npm shim is unavailable.
 
-Pull requests targeting `master`, pushes to `master`, and manual workflow dispatch run the `CI` workflow. The required job name is `laravel-quality`.
+The `CI` workflow runs for pull requests targeting `master`, pushes to `master`, and manual dispatches. Its `laravel-quality` job performs:
 
-CI checks:
-
-- Composer validation.
-- Composer dependency installation.
+- Composer validation and dependency installation.
 - Composer security audit.
-- Laravel migration and seeder.
-- Laravel Pint.
+- Laravel migration and demo seeding.
+- Laravel Pint verification.
 - Vite production build.
 - PHPUnit feature and unit tests.
-- Laravel config cache.
-- Laravel route cache.
-- Laravel view cache.
-- Optimize clear.
+- Config, route, and Blade view cache verification.
 
-## Private Attachment Behavior
+## Security
 
-Ticket attachments are stored through Laravel Storage on `config('deskit.attachment_disk')`, defaulting to `local`. The local disk is private storage. Files are downloaded only through `TicketAttachmentController` after policy authorization.
+- Policies and middleware protect role-specific and resource-specific actions.
+- Ticket visibility is scoped to the requester, assigned technician, or administrator.
+- Public registration always creates an active requester account.
+- Inactive accounts cannot log in, and active sessions are invalidated after deactivation.
+- Laravel Breeze applies login rate limiting and passwords are hashed by Laravel.
+- Ticket attachments are stored on a configurable non-public disk.
+- Attachments are downloaded only through an authorized controller action.
+- Ticket attachments do not require a public storage URL or `storage:link`.
+- Production must use `APP_DEBUG=false`; demo credentials must never be reused.
 
-deskIT does not create public attachment URLs and does not require `storage:link` for ticket attachments.
-
-## Screenshots
-
-Screenshots: To be captured from the running rebranded deskIT UI.
-
-Checklist: [Screenshot Checklist](docs/SCREENSHOT_CHECKLIST.md)
-
-No screenshot image is displayed here until a real screenshot file exists.
-
-## Demo Video
-
-Demo video: To be recorded.
-
-Script: [Demo Script](docs/DEMO_SCRIPT.md)
-
-## Deployment
-
-Deployment guide: [Deployment Guide](docs/DEPLOYMENT.md)
-
-No live demo URL is listed because no external deployment has been completed and verified yet.
-
-## Documentation
-
-- [PRD Compliance](docs/PRD_COMPLIANCE.md)
-- [ERD](docs/ERD.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
-- [Release Checklist](docs/RELEASE_CHECKLIST.md)
-- [Screenshot Checklist](docs/SCREENSHOT_CHECKLIST.md)
-- [Demo Script](docs/DEMO_SCRIPT.md)
-- [Security Policy](SECURITY.md)
-- [Changelog](CHANGELOG.md)
-- [License](LICENSE)
+For production, start from `.env.production.example`, serve only the `public/` directory over HTTPS, use persistent private attachment storage, back up the database and attachments, and run `php artisan migrate --force` without demo seeding. No production deployment is claimed by this repository.
 
 ## Known Limitations
 
-- Screenshots are not captured yet.
-- Demo video is not recorded yet.
-- External deployment is not completed yet.
-- Email delivery is not configured for production.
-- Advanced analytics charts are not included.
-- No REST API, Laravel Sanctum, React, Inertia, WebSocket, real-time chat, AI, QR/barcode, export, SLA automation, procurement, depreciation, or multi-tenant support.
+- No REST API.
+- No React, Vue, or Inertia frontend.
+- No real-time chat or WebSocket workflow.
+- No production email delivery configuration.
+- No artificial intelligence or automatic ticket classification.
+- No QR or barcode workflow.
+- No PDF or Excel export.
+- No SLA automation.
+- No procurement or depreciation modules.
+- No multi-tenant architecture.
+- Production deployment has not been verified.
+
+## Project Status
+
+**Feature-complete MVP — v1.0.0 Release Candidate**
+
+Core features, automated tests, CI, UI polish, and deskIT branding are complete. Production deployment and a formal GitHub Release remain separate final steps.
 
 ## License
 
-deskIT is open-sourced under the [MIT License](LICENSE).
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
